@@ -6,5 +6,5 @@ INSERT INTO VENUE VALUES
 ('VN0005', 'Livonian Blue Court', 'West Garden Road, Grant Park'),
 ('VN0006', 'Crescent Hall', 'Central Avenue, Grant Park'),
 ('VN0007', 'Merwaldian Grounds', 'Northwest Corner, Grant Park'),
-('VN0008', 'Sesper Pavilion', 'East Shore Road, Grant Park');
+('VN0008', 'Sesper Pavilion', 'East Shore Road, Grant Park')
 ON CONFLICT (venue_id) DO NOTHING;
