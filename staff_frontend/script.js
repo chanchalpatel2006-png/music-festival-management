@@ -1,25 +1,61 @@
-const artists = [
-    {
-        artist_id: "AR001",
-        artist_name: "The Driver Era",
-        artist_type: "BAND",
-        country: "USA",
-        manager_id: "MN001"
-    },
+// ARTIST MANAGEMENT CARD
+const artistCard = document.getElementById("artistCard");
 
-    {
-        artist_id: "AR002",
-        artist_name: "Sabrina Carpenter",
-        artist_type: "SOLO",
-        country: "USA",
-        manager_id: "MN002"
-    },
+if (artistCard) {
+    artistCard.addEventListener("click", function () {
+        window.location.href = "artist_management/index.html";
+    });
+}
 
-    {
-        artist_id: "AR003",
-        artist_name: "Armaan Malik",
-        artist_type: "SOLO",
-        country: "INDIA",
-        manager_id: "MN001"
-    }
-];
+
+// EVENT & VENUE CARD
+const eventVenueCard = document.getElementById("eventVenueCard");
+
+if (eventVenueCard) {
+    eventVenueCard.addEventListener("click", function () {
+        window.location.href = "event_venue/index.html";
+    });
+}
+
+
+// TICKETING & PAYMENTS CARD
+
+const ticketingCard =
+    document.getElementById("ticketingCard");
+
+if (ticketingCard) {
+
+    ticketingCard.addEventListener("click", function () {
+
+        window.location.href =
+            "ticketing_payments/index.html";
+
+    });
+
+}
+
+// VENDOR & STALL CARD
+const vendorCard = document.getElementById("vendorCard");
+
+if (vendorCard) {
+    vendorCard.addEventListener("click", function () {
+        window.location.href = "vendor_stall/index.html";
+    });
+}
+
+
+// SPONSORSHIPS & STAFFING CARD
+
+const sponsorStaffCard =
+    document.getElementById("sponsorStaffCard");
+
+if (sponsorStaffCard) {
+
+    sponsorStaffCard.addEventListener("click", function () {
+
+        window.location.href =
+            "sponsorship_staffing/index.html";
+
+    });
+
+}

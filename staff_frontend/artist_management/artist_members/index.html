@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Artist Member Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <h2>Concert Admin</h2>
+
+            <nav>
+                <a href="../../index.html">Dashboard</a>
+                <a href="../index.html">Artist Management</a>
+                <a href="#" class="active">Artist Members</a>
+            </nav>
+
+            <a href="../../../login/index.html" class="logout">
+                Logout
+            </a>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header>
+
+                <div>
+                    <h1>👥 Artist Members</h1>
+                    <p>Manage members of bands and groups.</p>
+                </div>
+
+                <button id="addMemberBtn">
+                    + Add Member
+                </button>
+
+            </header>
+
+
+            <!-- Member Table -->
+            <section class="table-section">
+
+                <h2>Artist Member Records</h2>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Member ID</th>
+                                <th>Artist ID</th>
+                                <th>Member Name</th>
+                                <th>Instrument</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="memberTableBody">
+
+                            <!-- Member records will appear here -->
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- Add Member Modal -->
+    <div class="modal" id="memberModal">
+
+        <div class="modal-content">
+
+            <span class="close" id="closeModal">&times;</span>
+
+            <h2>Add Artist Member</h2>
+
+            <form id="memberForm">
+
+                <label>Member ID</label>
+                <input
+                    type="text"
+                    id="memberId"
+                    maxlength="6"
+                    placeholder="e.g. MB0001"
+                    required
+                >
+
+
+                <label>Artist ID</label>
+                <input
+                    type="text"
+                    id="artistId"
+                    maxlength="5"
+                    placeholder="e.g. AR001"
+                    required
+                >
+
+
+                <label>Member Name</label>
+                <input
+                    type="text"
+                    id="memberName"
+                    maxlength="50"
+                    placeholder="Enter member name"
+                    required
+                >
+
+
+                <label>Instrument</label>
+                <input
+                    type="text"
+                    id="instrument"
+                    maxlength="20"
+                    placeholder="e.g. Guitar"
+                >
+
+
+                <button type="submit" class="save-btn">
+                    Add Member
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

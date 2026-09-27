@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Artist Genre Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <h2>Concert Admin</h2>
+
+            <nav>
+                <a href="../../index.html">Dashboard</a>
+                <a href="../index.html">Artist Management</a>
+                <a href="#" class="active">Artist Genres</a>
+            </nav>
+
+            <a href="../../../login/index.html" class="logout">
+                Logout
+            </a>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header>
+
+                <div>
+                    <h1>🔗 Artist Genres</h1>
+                    <p>Manage genre assignments for artists.</p>
+                </div>
+
+                <button id="addArtistGenreBtn">
+                    + Assign Genre
+                </button>
+
+            </header>
+
+
+            <!-- Artist Genre Table -->
+            <section class="table-section">
+
+                <h2>Artist Genre Records</h2>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Artist ID</th>
+                                <th>Genre ID</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="artistGenreTableBody">
+
+                            <!-- Records will appear here -->
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- Assign Genre Modal -->
+    <div class="modal" id="artistGenreModal">
+
+        <div class="modal-content">
+
+            <span class="close" id="closeModal">&times;</span>
+
+            <h2>Assign Genre to Artist</h2>
+
+            <form id="artistGenreForm">
+
+                <label>Artist ID</label>
+
+                <input
+                    type="text"
+                    id="artistId"
+                    maxlength="5"
+                    placeholder="e.g. AR001"
+                    required
+                >
+
+
+                <label>Genre ID</label>
+
+                <input
+                    type="text"
+                    id="genreId"
+                    maxlength="4"
+                    placeholder="e.g. G001"
+                    required
+                >
+
+
+                <button type="submit" class="save-btn">
+                    Assign Genre
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

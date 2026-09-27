@@ -5,16 +5,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Concert Management System</title>
+    <title>Admin Dashboard</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1>Concert & Music Festival Management System</h1>
+    <div class="app">
 
-    <p>Welcome to the management system.</p>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <h2>Concert Admin</h2>
+
+            <nav>
+                <a href="#" class="active">Dashboard</a>
+                <a href="artist_management/index.html">Artists</a>
+                <a href="event_venue/index.html">Events & Venues</a>
+                <a href="ticketing_payments/index.html">Tickets & Payments</a>
+                <a href="vendor_stall/index.html">Vendors & Stalls</a>
+                <a href="sponsorship_staffing/index.html">Sponsors & Staff</a>
+            </nav>
+
+            <a href="../login/index.html" class="logout">
+                Logout
+            </a>
+
+        </aside>
+
+
+        <!-- Main Area -->
+        <main class="main-content">
+
+            <header>
+
+                <h1>Admin Dashboard</h1>
+
+                <p>
+                    Concert & Music Festival Management System
+                </p>
+
+            </header>
+
+
+            <section class="content">
+
+                <h2>Management Modules</h2>
+
+                <div class="dashboard-cards">
+
+
+                    <!-- ARTIST MANAGEMENT -->
+                    <div class="dashboard-card" id="artistCard">
+
+                        <div class="card-icon">🎤</div>
+
+                        <h3>Artist Management</h3>
+
+                        <p>
+                            Manage artists, managers, genres and band members.
+                        </p>
+
+                    </div>
+
+
+                    <!-- EVENT & VENUE -->
+                    <div class="dashboard-card" id="eventVenueCard">
+
+                        <div class="card-icon">🎪</div>
+
+                        <h3>Event & Venue</h3>
+
+                        <p>
+                            Manage events, venues, stages, songs,
+                            performances and setlists.
+                        </p>
+
+                    </div>
+
+
+                    <!-- TICKETING & PAYMENTS -->
+                    <div class="dashboard-card" id="ticketingCard">
+
+                        <div class="card-icon">🎟️</div>
+
+                        <h3>Ticketing & Payments</h3>
+
+                        <p>
+                            Manage attendees, ticket types,
+                            tickets and payments.
+                        </p>
+
+                    </div>
+
+
+                    <!-- VENDOR & STALL -->
+                    <div class="dashboard-card" id="vendorCard">
+
+                        <div class="card-icon">🏪</div>
+
+                        <h3>Vendor & Stall</h3>
+
+                        <p>
+                            Manage vendors, stalls and stall setups.
+                        </p>
+
+                    </div>
+
+
+                    <!-- SPONSORSHIPS & STAFFING -->
+                    <div class="dashboard-card" id="sponsorStaffCard">
+
+                        <div class="card-icon">🤝</div>
+
+                        <h3>Sponsorships & Staffing</h3>
+
+                        <p>
+                            Manage sponsors, sponsor demands,
+                            staff and assignments.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
 
     <script src="script.js"></script>
 

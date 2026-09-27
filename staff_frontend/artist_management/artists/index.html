@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Artist Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <h2>Concert Admin</h2>
+
+            <nav>
+                <a href="../../index.html">Dashboard</a>
+
+                <a href="../index.html">Artist Management</a>
+
+                <a href="#" class="active">Artists</a>
+            </nav>
+
+            <a href="../../../login/index.html" class="logout">
+                Logout
+            </a>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header>
+
+                <div>
+                    <h1>🎤 Artists</h1>
+
+                    <p>
+                        Manage artist information.
+                    </p>
+                </div>
+
+                <button id="addArtistBtn">
+                    + Add Artist
+                </button>
+
+            </header>
+
+
+            <!-- Artist Table -->
+            <section class="table-section">
+
+                <h2>Artist Records</h2>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Artist ID</th>
+                                <th>Artist Name</th>
+                                <th>Type</th>
+                                <th>Country</th>
+                                <th>Manager ID</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="artistTableBody">
+
+                            <!-- Artist records will appear here -->
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- Add Artist Modal -->
+    <div class="modal" id="artistModal">
+
+        <div class="modal-content">
+
+            <span class="close" id="closeModal">&times;</span>
+
+            <h2>Add Artist</h2>
+
+            <form id="artistForm">
+
+                <label>Artist ID</label>
+                <input
+                    type="text"
+                    id="artistId"
+                    maxlength="5"
+                    placeholder="e.g. AR001"
+                    required
+                >
+
+
+                <label>Artist Name</label>
+                <input
+                    type="text"
+                    id="artistName"
+                    placeholder="Enter artist name"
+                    required
+                >
+
+
+                <label>Artist Type</label>
+
+                <select id="artistType" required>
+                    <option value="">Select Artist Type</option>
+                    <option value="SOLO">SOLO</option>
+                    <option value="BAND">BAND</option>
+                </select>
+
+
+                <label>Country</label>
+                <input
+                    type="text"
+                    id="artistCountry"
+                    placeholder="Enter country"
+                    required
+                >
+
+
+                <label>Manager ID</label>
+                <input
+                    type="text"
+                    id="managerId"
+                    maxlength="5"
+                    placeholder="e.g. MN001"
+                >
+
+
+                <button type="submit" class="save-btn">
+                    Add Artist
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Song Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <h2>Concert Admin</h2>
+
+        <nav>
+            <a href="../../index.html">Dashboard</a>
+            <a href="../../artist_management/index.html">Artist Management</a>
+            <a href="../index.html">Event & Venue</a>
+            <a href="#" class="active">Songs</a>
+        </nav>
+
+        <a href="../../../login/index.html" class="logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header>
+
+            <div>
+                <h1>🎵 Songs</h1>
+                <p>Manage songs performed by artists.</p>
+            </div>
+
+            <button id="addSongBtn">
+                + Add Song
+            </button>
+
+        </header>
+
+
+        <!-- TABLE -->
+        <section class="table-section">
+
+            <h2>Song Records</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Song ID</th>
+                            <th>Song Name</th>
+                            <th>Artist ID</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="songTableBody">
+                        <!-- Song records will appear here -->
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ADD / EDIT SONG MODAL -->
+<div class="modal" id="songModal">
+
+    <div class="modal-content">
+
+        <span class="close" id="closeModal">&times;</span>
+
+        <h2>Add Song</h2>
+
+        <form id="songForm">
+
+            <label>Song ID</label>
+
+            <input
+                type="text"
+                id="songId"
+                maxlength="6"
+                placeholder="e.g. SG0001"
+                required
+            >
+
+
+            <label>Song Name</label>
+
+            <input
+                type="text"
+                id="songName"
+                maxlength="100"
+                placeholder="Enter song name"
+                required
+            >
+
+
+            <label>Artist ID</label>
+
+            <input
+                type="text"
+                id="artistId"
+                maxlength="5"
+                placeholder="e.g. AR001"
+                required
+            >
+
+
+            <button type="submit" class="save-btn">
+                Add Song
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

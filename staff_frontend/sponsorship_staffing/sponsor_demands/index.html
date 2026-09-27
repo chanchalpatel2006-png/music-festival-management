@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Sponsor Demands</title>
+
+    <link rel="stylesheet" href="../crud.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <h2>Concert Admin</h2>
+
+        <nav>
+            <a href="../../index.html">Dashboard</a>
+            <a href="../index.html">Sponsorships & Staffing</a>
+            <a href="#" class="active">Sponsor Demands</a>
+        </nav>
+
+        <a href="../../../login/index.html"
+           class="logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header>
+
+            <div>
+                <h1>📋 Sponsor Demands</h1>
+
+                <p>
+                    Manage sponsor promotional and facility demands.
+                </p>
+            </div>
+
+
+            <button id="addRecordBtn"
+                    class="add-btn">
+
+                + Add Demand
+
+            </button>
+
+        </header>
+
+
+        <section class="table-section">
+
+            <h2>Sponsor Demand Records</h2>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Sponsor ID</th>
+                            <th>Demand Type</th>
+                            <th>Actions</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="recordTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div class="modal" id="recordModal">
+
+    <div class="modal-content">
+
+        <span class="close"
+              id="closeModal">
+            &times;
+        </span>
+
+
+        <h2 id="modalTitle">
+            Add Sponsor Demand
+        </h2>
+
+
+        <form id="recordForm">
+
+
+            <label>Sponsor ID</label>
+
+            <input
+                type="text"
+                id="sponsor_id"
+                maxlength="6"
+                placeholder="e.g. SP0001"
+                required
+            >
+
+
+            <label>Demand Type</label>
+
+            <select id="demand_type" required>
+
+                <option value="">
+                    Select demand
+                </option>
+
+                <option value="Stall">
+                    Stall
+                </option>
+
+                <option value="PR">
+                    PR
+                </option>
+
+                <option value="Banner">
+                    Banner
+                </option>
+
+                <option value="Stage Branding">
+                    Stage Branding
+                </option>
+
+                <option value="Social Media Promotion">
+                    Social Media Promotion
+                </option>
+
+                <option value="Booth">
+                    Booth
+                </option>
+
+                <option value="Logo Placement">
+                    Logo Placement
+                </option>
+
+            </select>
+
+
+            <p id="formError"
+               class="error-message">
+            </p>
+
+
+            <button
+                type="submit"
+                id="saveBtn"
+                class="save-btn"
+            >
+                Add Sponsor Demand
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+window.pageConfig = {
+
+    name: "Sponsor Demand",
+
+    fields: [
+        "sponsor_id",
+        "demand_type"
+    ],
+
+    primaryKey: [
+        "sponsor_id",
+        "demand_type"
+    ],
+
+    validate: function () {
+
+        return "";
+
+    }
+
+};
+
+</script>
+
+
+<script src="../crud.js"></script>
+
+</body>
+
+</html>

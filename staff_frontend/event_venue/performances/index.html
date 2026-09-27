@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Performance Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <h2>Concert Admin</h2>
+
+        <nav>
+            <a href="../../index.html">Dashboard</a>
+            <a href="../../artist_management/index.html">Artist Management</a>
+            <a href="../index.html">Event & Venue</a>
+            <a href="#" class="active">Performances</a>
+        </nav>
+
+        <a href="../../../login/index.html" class="logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header>
+
+            <div>
+                <h1>🎤 Performances</h1>
+                <p>Manage artist performances at festival events.</p>
+            </div>
+
+            <button id="addPerformanceBtn">
+                + Add Performance
+            </button>
+
+        </header>
+
+
+        <!-- TABLE -->
+        <section class="table-section">
+
+            <h2>Performance Records</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Performance ID</th>
+                            <th>Event ID</th>
+                            <th>Artist ID</th>
+                            <th>Stage ID</th>
+                            <th>Performance Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="performanceTableBody">
+                        <!-- Performance records appear here -->
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ADD / EDIT PERFORMANCE MODAL -->
+<div class="modal" id="performanceModal">
+
+    <div class="modal-content">
+
+        <span class="close" id="closeModal">&times;</span>
+
+        <h2>Add Performance</h2>
+
+        <form id="performanceForm">
+
+            <label>Performance ID</label>
+
+            <input
+                type="text"
+                id="performanceId"
+                maxlength="6"
+                placeholder="e.g. PF0001"
+                required
+            >
+
+
+            <label>Event ID</label>
+
+            <input
+                type="text"
+                id="eventId"
+                maxlength="6"
+                placeholder="e.g. EV0001"
+                required
+            >
+
+
+            <label>Artist ID</label>
+
+            <input
+                type="text"
+                id="artistId"
+                maxlength="5"
+                placeholder="e.g. AR001"
+                required
+            >
+
+
+            <label>Stage ID</label>
+
+            <input
+                type="text"
+                id="stageId"
+                maxlength="6"
+                placeholder="e.g. ST0001"
+                required
+            >
+
+
+            <label>Performance Type</label>
+
+            <select id="performanceType" required>
+
+                <option value="">
+                    Select performance type
+                </option>
+
+                <option value="Main Act">
+                    Main Act
+                </option>
+
+                <option value="Opening Act">
+                    Opening Act
+                </option>
+
+            </select>
+
+
+            <button type="submit" class="save-btn">
+                Add Performance
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

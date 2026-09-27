@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ticketing & Payments</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <h2>Concert Admin</h2>
+
+        <nav>
+            <a href="../index.html">Dashboard</a>
+            <a href="../artist_management/index.html">Artist Management</a>
+            <a href="../event_venue/index.html">Event & Venue</a>
+            <a href="#" class="active">Ticketing & Payments</a>
+        </nav>
+
+        <a href="../../login/index.html" class="logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header>
+
+            <h1>🎟️ Ticketing & Payments</h1>
+
+            <p>
+                Manage attendees, ticket types, tickets and payments.
+            </p>
+
+        </header>
+
+
+        <section class="management-grid">
+
+            <!-- ATTENDEES -->
+            <div class="management-card" id="attendeesCard">
+
+                <div class="icon">👤</div>
+
+                <h2>Attendees</h2>
+
+                <p>
+                    Manage attendee information and contact details.
+                </p>
+
+            </div>
+
+
+            <!-- TICKET TYPES -->
+            <div class="management-card" id="ticketTypesCard">
+
+                <div class="icon">🎫</div>
+
+                <h2>Ticket Types</h2>
+
+                <p>
+                    Manage ticket categories, quantities and prices.
+                </p>
+
+            </div>
+
+
+            <!-- TICKETS -->
+            <div class="management-card" id="ticketsCard">
+
+                <div class="icon">🎟️</div>
+
+                <h2>Tickets</h2>
+
+                <p>
+                    Manage purchased tickets and their status.
+                </p>
+
+            </div>
+
+
+            <!-- PAYMENTS -->
+            <div class="management-card" id="paymentsCard">
+
+                <div class="icon">💳</div>
+
+                <h2>Payments</h2>
+
+                <p>
+                    Manage ticket payments and payment status.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

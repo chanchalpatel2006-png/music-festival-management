@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Payment | Festivo</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+<nav class="navbar">
+
+    <a href="../index.html" class="logo">
+        🎵 Festivo
+    </a>
+
+    <a href="../events/index.html">
+        Cancel
+    </a>
+
+</nav>
+
+
+<main class="container">
+
+
+    <div class="heading">
+
+        <span>STEP 2 OF 3</span>
+
+        <h1>Complete Payment</h1>
+
+        <p>
+            Review your booking and choose a payment method.
+        </p>
+
+    </div>
+
+
+    <div class="payment-layout">
+
+
+        <section class="payment-card">
+
+            <h2>Payment Method</h2>
+
+
+            <form id="paymentForm">
+
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="UPI"
+                        required
+                    >
+
+                    <div>
+                        <strong>UPI</strong>
+                        <span>
+                            Pay using any UPI application
+                        </span>
+                    </div>
+
+                </label>
+
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="Card"
+                    >
+
+                    <div>
+                        <strong>Card</strong>
+                        <span>
+                            Credit or debit card
+                        </span>
+                    </div>
+
+                </label>
+
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="Net Banking"
+                    >
+
+                    <div>
+                        <strong>Net Banking</strong>
+                        <span>
+                            Pay using internet banking
+                        </span>
+                    </div>
+
+                </label>
+
+
+                <p id="paymentError" class="error"></p>
+
+
+                <button type="submit">
+                    Pay & Confirm Booking
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <aside class="order-summary">
+
+            <h2>Order Summary</h2>
+
+            <div class="row">
+                <span>Event</span>
+                <strong id="summaryEvent"></strong>
+            </div>
+
+            <div class="row">
+                <span>Ticket</span>
+                <strong id="summaryTicket"></strong>
+            </div>
+
+            <div class="row">
+                <span>Attendee</span>
+                <strong id="summaryAttendee"></strong>
+            </div>
+
+            <div class="total">
+                <span>Total</span>
+                <strong id="summaryPrice"></strong>
+            </div>
+
+        </aside>
+
+
+    </div>
+
+</main>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

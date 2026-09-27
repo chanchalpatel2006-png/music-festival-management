@@ -1,0 +1,278 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 250px;
+    background-color: #1f2937;
+    padding: 30px 20px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+
+    padding: 13px 15px;
+    border-radius: 7px;
+}
+
+.sidebar a:hover,
+.sidebar .active {
+    background-color: #374151;
+}
+
+.logout {
+    margin-top: auto;
+}
+
+
+/* MAIN */
+
+.main-content {
+    flex: 1;
+
+    padding: 40px;
+
+    background: linear-gradient(
+        135deg,
+        #061a40,
+        #0b3d91,
+        #1e73d8
+    );
+}
+
+
+/* HEADER */
+
+header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 35px;
+}
+
+header h1 {
+    font-size: 34px;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #cfe8ff;
+}
+
+
+/* ADD BUTTON */
+
+#addManagerBtn {
+    border: none;
+
+    padding: 13px 20px;
+
+    border-radius: 8px;
+
+    background-color: #2589ff;
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+#addManagerBtn:hover {
+    background-color: #40a2ff;
+    transform: translateY(-2px);
+}
+
+
+/* TABLE AREA */
+
+.table-section {
+    background: rgba(255, 255, 255, 0.13);
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+
+    backdrop-filter: blur(12px);
+
+    padding: 25px;
+
+    border-radius: 18px;
+}
+
+.table-section h2 {
+    margin-bottom: 20px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background-color: white;
+
+    color: #222;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 15px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #e8f1ff;
+
+    color: #0b3d91;
+}
+
+tbody tr:hover {
+    background-color: #f3f7ff;
+}
+
+
+/* =====================
+   ADD MANAGER MODAL
+===================== */
+
+.modal {
+    display: none;
+
+    position: fixed;
+    z-index: 1000;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.6);
+
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    width: 450px;
+
+    background: linear-gradient(
+        135deg,
+        #173a7a,
+        #2563b8
+    );
+
+    padding: 35px;
+
+    border-radius: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+
+    position: relative;
+}
+
+.modal-content h2 {
+    margin-bottom: 25px;
+}
+
+.close {
+    position: absolute;
+
+    right: 20px;
+    top: 15px;
+
+    font-size: 30px;
+
+    cursor: pointer;
+}
+
+#managerForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#managerForm label {
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+
+#managerForm input {
+    padding: 12px;
+
+    margin-bottom: 18px;
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 15px;
+}
+
+#managerForm input:focus {
+    outline: 2px solid #60a5fa;
+}
+
+.save-btn {
+    padding: 13px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #2589ff;
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background-color: #40a2ff;
+}

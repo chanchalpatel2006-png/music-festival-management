@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor & Stall Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <h2>Concert Admin</h2>
+
+        <nav>
+            <a href="../index.html">Dashboard</a>
+            <a href="../artist_management/index.html">Artist Management</a>
+            <a href="../event_venue/index.html">Event & Venue</a>
+            <a href="../ticketing_payments/index.html">Ticketing & Payments</a>
+            <a href="#" class="active">Vendor & Stall</a>
+        </nav>
+
+        <a href="../../login/index.html" class="logout">Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <header>
+            <h1>🏪 Vendor & Stall Management</h1>
+            <p>Manage vendors, stalls and their setup at festival venues.</p>
+        </header>
+
+        <section class="management-grid">
+
+            <div class="management-card" id="vendorsCard">
+                <div class="icon">🏪</div>
+                <h2>Vendors</h2>
+                <p>Manage vendor information and business details.</p>
+            </div>
+
+            <div class="management-card" id="stallsCard">
+                <div class="icon">🛍️</div>
+                <h2>Stalls</h2>
+                <p>Manage stalls operated by vendors.</p>
+            </div>
+
+            <div class="management-card" id="stallSetupsCard">
+                <div class="icon">🏕️</div>
+                <h2>Stall Setups</h2>
+                <p>Assign stalls to venues, dates and rental amounts.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

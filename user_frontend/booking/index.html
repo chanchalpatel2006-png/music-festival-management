@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Ticket | Festivo</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+<nav class="navbar">
+
+    <a href="../index.html" class="logo">
+        🎵 Festivo
+    </a>
+
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../events/index.html">Events</a>
+        <a href="../artists/index.html">Artists</a>
+        <a href="index.html" class="active">My Ticket</a>
+        <a href="../../login/index.html" class="logout">Logout</a>
+    </div>
+
+</nav>
+
+
+<div class="booking-container">
+
+
+    <div class="booking-heading">
+
+        <span>STEP 1 OF 3</span>
+
+        <h1>Book Your Ticket</h1>
+
+        <p>
+            Choose your ticket and enter attendee information.
+        </p>
+
+    </div>
+
+
+    <div id="noEventMessage" class="no-event">
+
+        <h2>No Event Selected</h2>
+
+        <p>
+            Select an event before booking your ticket.
+        </p>
+
+        <a href="../events/index.html">
+            Browse Events
+        </a>
+
+    </div>
+
+
+    <div id="bookingContent" class="booking-layout">
+
+
+        <!-- EVENT SUMMARY -->
+
+        <aside class="event-summary">
+
+            <span>YOUR EVENT</span>
+
+            <h2 id="eventName"></h2>
+
+            <div class="summary-row">
+                <small>DATE</small>
+                <p id="eventDate"></p>
+            </div>
+
+            <div class="summary-row">
+                <small>TIME</small>
+                <p id="eventTime"></p>
+            </div>
+
+            <div class="summary-row">
+                <small>VENUE</small>
+                <p id="eventVenue"></p>
+            </div>
+
+            <div class="summary-row">
+                <small>ARTISTS</small>
+                <p id="eventArtists"></p>
+            </div>
+
+        </aside>
+
+
+        <!-- FORM -->
+
+        <section class="booking-card">
+
+            <form id="bookingForm">
+
+
+                <h2>Choose Ticket</h2>
+
+
+                <div class="ticket-options">
+
+
+                    <label class="ticket-option">
+
+                        <input
+                            type="radio"
+                            name="ticket"
+                            value="GENERAL"
+                            data-price="1499"
+                            required
+                        >
+
+                        <div>
+                            <strong>GENERAL</strong>
+                            <span>Standard festival access</span>
+                        </div>
+
+                        <b>₹1,499</b>
+
+                    </label>
+
+
+                    <label class="ticket-option">
+
+                        <input
+                            type="radio"
+                            name="ticket"
+                            value="VIP"
+                            data-price="3499"
+                        >
+
+                        <div>
+                            <strong>VIP</strong>
+                            <span>Premium festival experience</span>
+                        </div>
+
+                        <b>₹3,499</b>
+
+                    </label>
+
+
+                    <label class="ticket-option">
+
+                        <input
+                            type="radio"
+                            name="ticket"
+                            value="STUDENT"
+                            data-price="999"
+                        >
+
+                        <div>
+                            <strong>STUDENT</strong>
+                            <span>Special student ticket</span>
+                        </div>
+
+                        <b>₹999</b>
+
+                    </label>
+
+
+                </div>
+
+
+                <h2 class="attendee-title">
+                    Attendee Details
+                </h2>
+
+
+                <div class="form-grid">
+
+                    <div>
+                        <label>Full Name</label>
+
+                        <input
+                            type="text"
+                            id="attendeeName"
+                            maxlength="50"
+                            required
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Age</label>
+
+                        <input
+                            type="number"
+                            id="age"
+                            min="15"
+                            required
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Email</label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            maxlength="50"
+                            required
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Phone</label>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            maxlength="15"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <p id="errorMessage" class="error"></p>
+
+
+                <button type="submit" class="continue-btn">
+                    Continue to Payment →
+                </button>
+
+
+            </form>
+
+        </section>
+
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
