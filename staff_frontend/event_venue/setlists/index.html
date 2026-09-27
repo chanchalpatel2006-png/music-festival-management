@@ -12,118 +12,108 @@
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <aside class="sidebar">
+        <aside class="sidebar">
 
-        <h2>Concert Admin</h2>
+            <h2>Concert Admin</h2>
 
-        <nav>
-            <a href="../../index.html">Dashboard</a>
-            <a href="../../artist_management/index.html">Artist Management</a>
-            <a href="../index.html">Event & Venue</a>
-            <a href="#" class="active">Setlists</a>
-        </nav>
+            <nav>
+                <a href="../../index.html">Dashboard</a>
+                <a href="../../artist_management/index.html">Artist Management</a>
+                <a href="../index.html">Event & Venue</a>
+                <a href="#" class="active">Setlists</a>
+            </nav>
 
-        <a href="../../../login/index.html" class="logout">
-            Logout
-        </a>
+            <a href="../../../login/index.html" class="logout">
+                Logout
+            </a>
 
-    </aside>
-
-
-    <main class="main-content">
-
-        <header>
-
-            <div>
-                <h1>📋 Setlists</h1>
-                <p>Manage setlists assigned to performances.</p>
-            </div>
-
-            <button id="addSetlistBtn">
-                + Add Setlist
-            </button>
-
-        </header>
+        </aside>
 
 
-        <section class="table-section">
+        <main class="main-content">
 
-            <h2>Setlist Records</h2>
+            <header>
 
-            <div class="table-container">
+                <div>
+                    <h1>📋 Setlists</h1>
+                    <p>Manage setlists assigned to performances.</p>
+                </div>
 
-                <table>
+                <button id="addSetlistBtn">
+                    + Add Setlist
+                </button>
 
-                    <thead>
-                        <tr>
-                            <th>Setlist ID</th>
-                            <th>Performance ID</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="setlistTableBody">
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
+            </header>
 
 
-<!-- MODAL -->
+            <section class="table-section">
 
-<div class="modal" id="setlistModal">
+                <h2>Setlist Records</h2>
 
-    <div class="modal-content">
+                <div class="table-container">
 
-        <span class="close" id="closeModal">&times;</span>
+                    <table>
 
-        <h2>Add Setlist</h2>
+                        <thead>
+                            <tr>
+                                <th>Setlist ID</th>
+                                <th>Performance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
 
-        <form id="setlistForm">
+                        <tbody id="setlistTableBody">
+                        </tbody>
 
-            <label>Setlist ID</label>
+                    </table>
 
-            <input
-                type="text"
-                id="setlistId"
-                maxlength="6"
-                placeholder="e.g. SL0001"
-                required
-            >
+                </div>
 
+            </section>
 
-            <label>Performance ID</label>
-
-            <input
-                type="text"
-                id="performanceId"
-                maxlength="6"
-                placeholder="e.g. PF0001"
-                required
-            >
-
-
-            <button type="submit" class="save-btn">
-                Add Setlist
-            </button>
-
-        </form>
+        </main>
 
     </div>
 
-</div>
+
+    <!-- MODAL -->
+
+    <div class="modal" id="setlistModal">
+
+        <div class="modal-content">
+
+            <span class="close" id="closeModal">&times;</span>
+
+            <h2>Add Setlist</h2>
+
+            <form id="setlistForm">
+
+                <label>Setlist ID</label>
+
+                <input type="text" id="setlistId" maxlength="6" placeholder="e.g. SL0001" required>
 
 
-<script src="script.js"></script>
+                <label>Performance</label>
+
+                <select id="performanceId" required>
+                    <option value="">Select Performance</option>
+                </select>
+
+
+                <button type="submit" class="save-btn">
+                    Add Setlist
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
 
 </body>
 

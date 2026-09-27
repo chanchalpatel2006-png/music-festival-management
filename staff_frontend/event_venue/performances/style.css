@@ -252,6 +252,10 @@ td {
 
 #performanceForm input,
 #performanceForm select {
+    display: block;
+
+    width: 100%;
+
     padding: 12px;
 
     margin-bottom: 18px;
@@ -262,6 +266,17 @@ td {
     font-size: 15px;
 
     background-color: white;
+    color: #111827;
+}
+
+#performanceForm select {
+    height: 43px;
+    cursor: pointer;
+}
+
+#performanceForm select option {
+    background-color: white;
+    color: #111827;
 }
 
 #performanceForm input:focus,

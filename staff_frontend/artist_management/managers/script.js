@@ -1,3 +1,5 @@
+const API_URL = "http://localhost:3000/api/manager";
+
 const addManagerBtn = document.getElementById("addManagerBtn");
 const managerModal = document.getElementById("managerModal");
 const closeModal = document.getElementById("closeModal");
@@ -5,9 +7,61 @@ const closeModal = document.getElementById("closeModal");
 const managerForm = document.getElementById("managerForm");
 const managerTableBody = document.getElementById("managerTableBody");
 
-
-// This will remember which row we are editing
 let editingRow = null;
+let editingManagerId = null;
+
+
+// ------------------------------------
+// LOAD MANAGERS FROM DATABASE
+// ------------------------------------
+
+async function loadManagers() {
+
+    try {
+
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error("Failed to load managers");
+        }
+
+        const managers = await response.json();
+
+        managerTableBody.innerHTML = "";
+
+        managers.forEach(manager => {
+            addRow(manager);
+        });
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Could not load managers from database.");
+
+    }
+}
+
+
+// ------------------------------------
+// ADD ROW TO TABLE
+// ------------------------------------
+
+function addRow(manager) {
+
+    const row = managerTableBody.insertRow();
+
+    row.insertCell(0).textContent = manager.manager_id;
+    row.insertCell(1).textContent = manager.manager_name;
+    row.insertCell(2).textContent = manager.phone;
+    row.insertCell(3).textContent = manager.email;
+
+    const actionCell = row.insertCell(4);
+
+    actionCell.innerHTML = `
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
+    `;
+}
 
 
 // ------------------------------------
@@ -16,15 +70,16 @@ let editingRow = null;
 
 addManagerBtn.addEventListener("click", function () {
 
-    // We are adding a NEW manager
     editingRow = null;
+    editingManagerId = null;
 
-    // Clear old form values
     managerForm.reset();
 
-    // Change heading/button back to Add
-    document.querySelector("#managerModal h2").textContent = "Add Manager";
-    document.querySelector(".save-btn").textContent = "Add Manager";
+    document.querySelector("#managerModal h2").textContent =
+        "Add Manager";
+
+    document.querySelector(".save-btn").textContent =
+        "Add Manager";
 
     managerModal.style.display = "flex";
 });
@@ -39,7 +94,6 @@ closeModal.addEventListener("click", function () {
 });
 
 
-// Close when clicking outside popup
 window.addEventListener("click", function (event) {
 
     if (event.target === managerModal) {
@@ -50,92 +104,127 @@ window.addEventListener("click", function (event) {
 
 
 // ------------------------------------
-// ADD OR UPDATE MANAGER
+// ADD / UPDATE MANAGER
 // ------------------------------------
 
-managerForm.addEventListener("submit", function (event) {
+managerForm.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
-
-    // Get values from form
     const managerId =
-        document.getElementById("managerId").value;
+        document.getElementById("managerId").value.trim();
 
     const managerName =
-        document.getElementById("managerName").value;
+        document.getElementById("managerName").value.trim();
 
     const managerPhone =
-        document.getElementById("managerPhone").value;
+        document.getElementById("managerPhone").value.trim();
 
     const managerEmail =
-        document.getElementById("managerEmail").value;
+        document.getElementById("managerEmail").value.trim();
 
 
-    // ====================================
-    // EDIT EXISTING MANAGER
-    // ====================================
+    try {
 
-    if (editingRow !== null) {
+        // ====================================
+        // UPDATE EXISTING MANAGER
+        // ====================================
 
-        editingRow.cells[0].textContent = managerId;
-        editingRow.cells[1].textContent = managerName;
-        editingRow.cells[2].textContent = managerPhone;
-        editingRow.cells[3].textContent = managerEmail;
+        if (editingRow !== null) {
 
-        editingRow = null;
+            const response = await fetch(API_URL, {
+
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    old_manager_id: editingManagerId,
+
+                    manager_id: managerId,
+                    manager_name: managerName,
+                    phone: managerPhone,
+                    email: managerEmail
+
+                })
+
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    result.error || "Manager update failed"
+                );
+            }
+
+
+            editingRow.cells[0].textContent = managerId;
+            editingRow.cells[1].textContent = managerName;
+            editingRow.cells[2].textContent = managerPhone;
+            editingRow.cells[3].textContent = managerEmail;
+
+
+            editingRow = null;
+            editingManagerId = null;
+
+        }
+
+
+        // ====================================
+        // ADD NEW MANAGER
+        // ====================================
+
+        else {
+
+            const response = await fetch(API_URL, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    manager_id: managerId,
+                    manager_name: managerName,
+                    phone: managerPhone,
+                    email: managerEmail
+
+                })
+
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    result.error || "Manager insertion failed"
+                );
+            }
+
+
+            addRow(result);
+
+        }
+
+
+        managerForm.reset();
+
+        managerModal.style.display = "none";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+
     }
-
-
-    // ====================================
-    // ADD NEW MANAGER
-    // ====================================
-
-    else {
-
-        const row = managerTableBody.insertRow();
-
-
-        // Create cells
-        const idCell = row.insertCell(0);
-        const nameCell = row.insertCell(1);
-        const phoneCell = row.insertCell(2);
-        const emailCell = row.insertCell(3);
-        const actionCell = row.insertCell(4);
-
-
-        // Add manager information
-        idCell.textContent = managerId;
-        nameCell.textContent = managerName;
-        phoneCell.textContent = managerPhone;
-        emailCell.textContent = managerEmail;
-
-
-        // EDIT BUTTON
-        const editButton = document.createElement("button");
-
-        editButton.textContent = "Edit";
-        editButton.className = "edit-btn";
-
-
-        // DELETE BUTTON
-        const deleteButton = document.createElement("button");
-
-        deleteButton.textContent = "Delete";
-        deleteButton.className = "delete-btn";
-
-
-        actionCell.appendChild(editButton);
-        actionCell.appendChild(deleteButton);
-    }
-
-
-    // Clear form
-    managerForm.reset();
-
-
-    // Close popup
-    managerModal.style.display = "none";
 
 });
 
@@ -144,7 +233,7 @@ managerForm.addEventListener("submit", function (event) {
 // EDIT + DELETE
 // ------------------------------------
 
-managerTableBody.addEventListener("click", function (event) {
+managerTableBody.addEventListener("click", async function (event) {
 
     const clickedButton = event.target;
 
@@ -157,11 +246,50 @@ managerTableBody.addEventListener("click", function (event) {
 
         const row = clickedButton.closest("tr");
 
-        const confirmDelete =
-            confirm("Are you sure you want to delete this manager?");
+        const managerId = row.cells[0].textContent;
 
-        if (confirmDelete) {
+
+        const confirmDelete = confirm(
+            `Are you sure you want to delete manager ${managerId}?`
+        );
+
+
+        if (!confirmDelete) {
+            return;
+        }
+
+
+        try {
+
+            const response = await fetch(
+                `${API_URL}/${managerId}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+            const result = await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    result.error || "Manager deletion failed"
+                );
+
+            }
+
+
             row.remove();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(error.message);
+
         }
 
     }
@@ -175,11 +303,12 @@ managerTableBody.addEventListener("click", function (event) {
 
         const row = clickedButton.closest("tr");
 
-        // Remember which row we are editing
         editingRow = row;
 
+        editingManagerId =
+            row.cells[0].textContent;
 
-        // Put existing values into form
+
         document.getElementById("managerId").value =
             row.cells[0].textContent;
 
@@ -193,7 +322,6 @@ managerTableBody.addEventListener("click", function (event) {
             row.cells[3].textContent;
 
 
-        // Change popup text
         document.querySelector("#managerModal h2").textContent =
             "Edit Manager";
 
@@ -201,9 +329,15 @@ managerTableBody.addEventListener("click", function (event) {
             "Save Changes";
 
 
-        // Open popup
         managerModal.style.display = "flex";
 
     }
 
 });
+
+
+// ------------------------------------
+// LOAD DATA WHEN PAGE OPENS
+// ------------------------------------
+
+loadManagers();

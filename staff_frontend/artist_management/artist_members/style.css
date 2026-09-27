@@ -220,31 +220,35 @@ td {
 
 
 /* FORM */
-
-#memberForm {
-    display: flex;
-    flex-direction: column;
-}
-
-#memberForm label {
-    margin-bottom: 7px;
-    font-weight: bold;
-}
-
-#memberForm input {
+#memberForm input,
+#memberForm select {
+    width: 100%;
     padding: 12px;
     margin-bottom: 18px;
 
     border: none;
     border-radius: 7px;
 
-    font-size: 15px;
+    background-color: white;
+    color: #111827;
+
+    font-size: 16px;
 }
 
-#memberForm input:focus {
+#memberForm input:focus,
+#memberForm select:focus {
     outline: 2px solid #60a5fa;
 }
 
+#memberForm select {
+    height: 45px;
+    cursor: pointer;
+}
+
+#memberForm select option {
+    background-color: white;
+    color: #111827;
+}
 
 /* SAVE */
 

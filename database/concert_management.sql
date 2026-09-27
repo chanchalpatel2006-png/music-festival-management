@@ -354,6 +354,133 @@ ALTER TABLE public.ticket_type OWNER TO postgres;
 --
 -- Name: vendor; Type: TABLE; Schema: public; Owner: postgres
 --
+CREATE OR REPLACE FUNCTION update_ticket_type_available()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    -- INSERT
+    IF TG_OP = 'INSERT' THEN
+
+        IF NEW.ticket_status IN ('Active', 'Used') THEN
+
+            UPDATE ticket_type
+            SET available = available - 1
+            WHERE ticket_type_id = NEW.ticket_type_id
+              AND available > 0;
+
+            IF NOT FOUND THEN
+                RAISE EXCEPTION
+                    'No available tickets remaining for ticket type %',
+                    NEW.ticket_type_id;
+            END IF;
+
+        END IF;
+
+        RETURN NEW;
+    END IF;
+
+
+    -- UPDATE
+    IF TG_OP = 'UPDATE' THEN
+
+        -- Same ticket type
+        IF OLD.ticket_type_id = NEW.ticket_type_id THEN
+
+            -- Active/Used -> Cancelled
+            IF OLD.ticket_status IN ('Active', 'Used')
+               AND NEW.ticket_status = 'Cancelled' THEN
+
+                UPDATE ticket_type
+                SET available = available + 1
+                WHERE ticket_type_id = NEW.ticket_type_id;
+
+            END IF;
+
+
+            -- Cancelled -> Active/Used
+            IF OLD.ticket_status = 'Cancelled'
+               AND NEW.ticket_status IN ('Active', 'Used') THEN
+
+                UPDATE ticket_type
+                SET available = available - 1
+                WHERE ticket_type_id = NEW.ticket_type_id
+                  AND available > 0;
+
+                IF NOT FOUND THEN
+                    RAISE EXCEPTION
+                        'No available tickets remaining for ticket type %',
+                        NEW.ticket_type_id;
+                END IF;
+
+            END IF;
+
+        ELSE
+
+            -- Ticket type changed
+            -- Return quantity to old ticket type
+            IF OLD.ticket_status IN ('Active', 'Used') THEN
+
+                UPDATE ticket_type
+                SET available = available + 1
+                WHERE ticket_type_id = OLD.ticket_type_id;
+
+            END IF;
+
+
+            -- Take quantity from new ticket type
+            IF NEW.ticket_status IN ('Active', 'Used') THEN
+
+                UPDATE ticket_type
+                SET available = available - 1
+                WHERE ticket_type_id = NEW.ticket_type_id
+                  AND available > 0;
+
+                IF NOT FOUND THEN
+                    RAISE EXCEPTION
+                        'No available tickets remaining for ticket type %',
+                        NEW.ticket_type_id;
+                END IF;
+
+            END IF;
+
+        END IF;
+
+        RETURN NEW;
+    END IF;
+
+
+    -- DELETE
+    IF TG_OP = 'DELETE' THEN
+
+        IF OLD.ticket_status IN ('Active', 'Used') THEN
+
+            UPDATE ticket_type
+            SET available = available + 1
+            WHERE ticket_type_id = OLD.ticket_type_id;
+
+        END IF;
+
+        RETURN OLD;
+    END IF;
+
+
+    RETURN NULL;
+
+END;
+$$;
+
+
+DROP TRIGGER IF EXISTS ticket_type_available_trigger
+ON ticket;
+
+
+CREATE TRIGGER ticket_type_available_trigger
+AFTER INSERT OR UPDATE OR DELETE
+ON ticket
+FOR EACH ROW
+EXECUTE FUNCTION update_ticket_type_available();
 
 CREATE TABLE public.vendor (
     vendor_id character varying(5) NOT NULL,

@@ -61,7 +61,7 @@
                         <thead>
                             <tr>
                                 <th>Member ID</th>
-                                <th>Artist ID</th>
+                                <th>Artist</th>
                                 <th>Member Name</th>
                                 <th>Instrument</th>
                                 <th>Actions</th>
@@ -97,42 +97,22 @@
             <form id="memberForm">
 
                 <label>Member ID</label>
-                <input
-                    type="text"
-                    id="memberId"
-                    maxlength="6"
-                    placeholder="e.g. MB0001"
-                    required
-                >
+                <input type="text" id="memberId" maxlength="6" placeholder="e.g. MB0001" required>
 
 
-                <label>Artist ID</label>
-                <input
-                    type="text"
-                    id="artistId"
-                    maxlength="5"
-                    placeholder="e.g. AR001"
-                    required
-                >
+                <label>Artist</label>
+
+                <select id="artistId" required>
+                    <option value="">Select Artist</option>
+                </select>
 
 
                 <label>Member Name</label>
-                <input
-                    type="text"
-                    id="memberName"
-                    maxlength="50"
-                    placeholder="Enter member name"
-                    required
-                >
+                <input type="text" id="memberName" maxlength="50" placeholder="Enter member name" required>
 
 
                 <label>Instrument</label>
-                <input
-                    type="text"
-                    id="instrument"
-                    maxlength="20"
-                    placeholder="e.g. Guitar"
-                >
+                <input type="text" id="instrument" maxlength="20" placeholder="e.g. Guitar">
 
 
                 <button type="submit" class="save-btn">

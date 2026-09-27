@@ -236,18 +236,26 @@ td {
 
 
 /* FORM */
+/* FORM */
 
 #setlistSongForm {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 #setlistSongForm label {
+    display: block;
     margin-bottom: 7px;
     font-weight: bold;
 }
 
-#setlistSongForm input {
+#setlistSongForm input,
+#setlistSongForm select {
+    display: block;
+
+    width: 100%;
+
     padding: 12px;
 
     margin-bottom: 18px;
@@ -256,12 +264,25 @@ td {
     border-radius: 7px;
 
     font-size: 15px;
+
+    background-color: white;
+    color: #111827;
 }
 
-#setlistSongForm input:focus {
+#setlistSongForm input:focus,
+#setlistSongForm select:focus {
     outline: 2px solid #60a5fa;
 }
 
+#setlistSongForm select {
+    height: 43px;
+    cursor: pointer;
+}
+
+#setlistSongForm select option {
+    background-color: white;
+    color: #111827;
+}
 
 /* ERROR */
 

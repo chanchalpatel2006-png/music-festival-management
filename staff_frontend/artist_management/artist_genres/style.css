@@ -220,6 +220,7 @@ td {
 
 
 /* FORM */
+/* FORM */
 
 #artistGenreForm {
     display: flex;
@@ -231,21 +232,36 @@ td {
     font-weight: bold;
 }
 
-#artistGenreForm input {
+#artistGenreForm input,
+#artistGenreForm select {
+    width: 100%;
+
     padding: 12px;
     margin-bottom: 18px;
 
     border: none;
     border-radius: 7px;
 
-    font-size: 15px;
+    background-color: white;
+    color: #111827;
+
+    font-size: 16px;
 }
 
-#artistGenreForm input:focus {
+#artistGenreForm input:focus,
+#artistGenreForm select:focus {
     outline: 2px solid #60a5fa;
 }
 
+#artistGenreForm select {
+    height: 45px;
+    cursor: pointer;
+}
 
+#artistGenreForm select option {
+    background-color: white;
+    color: #111827;
+}
 /* SAVE BUTTON */
 
 .save-btn {

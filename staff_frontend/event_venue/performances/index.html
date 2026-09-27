@@ -12,165 +12,147 @@
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
 
-        <h2>Concert Admin</h2>
+            <h2>Concert Admin</h2>
 
-        <nav>
-            <a href="../../index.html">Dashboard</a>
-            <a href="../../artist_management/index.html">Artist Management</a>
-            <a href="../index.html">Event & Venue</a>
-            <a href="#" class="active">Performances</a>
-        </nav>
+            <nav>
+                <a href="../../index.html">Dashboard</a>
+                <a href="../../artist_management/index.html">Artist Management</a>
+                <a href="../index.html">Event & Venue</a>
+                <a href="#" class="active">Performances</a>
+            </nav>
 
-        <a href="../../../login/index.html" class="logout">
-            Logout
-        </a>
+            <a href="../../../login/index.html" class="logout">
+                Logout
+            </a>
 
-    </aside>
-
-
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-
-        <header>
-
-            <div>
-                <h1>🎤 Performances</h1>
-                <p>Manage artist performances at festival events.</p>
-            </div>
-
-            <button id="addPerformanceBtn">
-                + Add Performance
-            </button>
-
-        </header>
+        </aside>
 
 
-        <!-- TABLE -->
-        <section class="table-section">
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
 
-            <h2>Performance Records</h2>
+            <header>
 
-            <div class="table-container">
+                <div>
+                    <h1>🎤 Performances</h1>
+                    <p>Manage artist performances at festival events.</p>
+                </div>
 
-                <table>
+                <button id="addPerformanceBtn">
+                    + Add Performance
+                </button>
 
-                    <thead>
-                        <tr>
-                            <th>Performance ID</th>
-                            <th>Event ID</th>
-                            <th>Artist ID</th>
-                            <th>Stage ID</th>
-                            <th>Performance Type</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="performanceTableBody">
-                        <!-- Performance records appear here -->
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
+            </header>
 
 
-<!-- ADD / EDIT PERFORMANCE MODAL -->
-<div class="modal" id="performanceModal">
+            <!-- TABLE -->
+            <section class="table-section">
 
-    <div class="modal-content">
+                <h2>Performance Records</h2>
 
-        <span class="close" id="closeModal">&times;</span>
+                <div class="table-container">
 
-        <h2>Add Performance</h2>
+                    <table>
 
-        <form id="performanceForm">
+                        <thead>
+                            <tr>
+                                <th>Performance ID</th>
+                                <th>Event</th>
+                                <th>Artist</th>
+                                <th>Stage</th>
+                                <th>Performance Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
 
-            <label>Performance ID</label>
+                        <tbody id="performanceTableBody">
+                            <!-- Performance records appear here -->
+                        </tbody>
 
-            <input
-                type="text"
-                id="performanceId"
-                maxlength="6"
-                placeholder="e.g. PF0001"
-                required
-            >
+                    </table>
 
+                </div>
 
-            <label>Event ID</label>
+            </section>
 
-            <input
-                type="text"
-                id="eventId"
-                maxlength="6"
-                placeholder="e.g. EV0001"
-                required
-            >
-
-
-            <label>Artist ID</label>
-
-            <input
-                type="text"
-                id="artistId"
-                maxlength="5"
-                placeholder="e.g. AR001"
-                required
-            >
-
-
-            <label>Stage ID</label>
-
-            <input
-                type="text"
-                id="stageId"
-                maxlength="6"
-                placeholder="e.g. ST0001"
-                required
-            >
-
-
-            <label>Performance Type</label>
-
-            <select id="performanceType" required>
-
-                <option value="">
-                    Select performance type
-                </option>
-
-                <option value="Main Act">
-                    Main Act
-                </option>
-
-                <option value="Opening Act">
-                    Opening Act
-                </option>
-
-            </select>
-
-
-            <button type="submit" class="save-btn">
-                Add Performance
-            </button>
-
-        </form>
+        </main>
 
     </div>
 
-</div>
+
+    <!-- ADD / EDIT PERFORMANCE MODAL -->
+    <div class="modal" id="performanceModal">
+
+        <div class="modal-content">
+
+            <span class="close" id="closeModal">&times;</span>
+
+            <h2>Add Performance</h2>
+
+            <form id="performanceForm">
+
+                <label>Performance ID</label>
+
+                <input type="text" id="performanceId" maxlength="6" placeholder="e.g. PF0001" required>
 
 
-<script src="script.js"></script>
+                <label>Event</label>
+
+                <select id="eventId" required>
+                    <option value="">Select Event</option>
+                </select>
+
+
+                <label>Artist</label>
+
+                <select id="artistId" required>
+                    <option value="">Select Artist</option>
+                </select>
+
+
+                <label>Stage</label>
+
+                <select id="stageId" required>
+                    <option value="">Select Stage</option>
+                </select>
+
+
+                <label>Performance Type</label>
+
+                <select id="performanceType" required>
+
+                    <option value="">
+                        Select performance type
+                    </option>
+
+                    <option value="Main Act">
+                        Main Act
+                    </option>
+
+                    <option value="Opening Act">
+                        Opening Act
+                    </option>
+
+                </select>
+
+
+                <button type="submit" class="save-btn">
+                    Add Performance
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
 
 </body>
 

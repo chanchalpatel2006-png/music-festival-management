@@ -239,18 +239,24 @@ td {
 
 
 /* FORM */
+/* FORM */
 
 #eventForm {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 #eventForm label {
+    display: block;
     margin-bottom: 7px;
     font-weight: bold;
 }
 
-#eventForm input {
+#eventForm input,
+#eventForm select {
+    display: block;
+    width: 100%;
     padding: 12px;
 
     margin-bottom: 18px;
@@ -259,10 +265,24 @@ td {
     border-radius: 7px;
 
     font-size: 15px;
+
+    background-color: white;
+    color: #111827;
 }
 
-#eventForm input:focus {
+#eventForm input:focus,
+#eventForm select:focus {
     outline: 2px solid #60a5fa;
+}
+
+#eventForm select {
+    height: 43px;
+    cursor: pointer;
+}
+
+#eventForm select option {
+    background-color: white;
+    color: #111827;
 }
 
 

@@ -12,133 +12,117 @@
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
 
-        <h2>Concert Admin</h2>
+            <h2>Concert Admin</h2>
 
-        <nav>
-            <a href="../../index.html">Dashboard</a>
-            <a href="../../artist_management/index.html">Artist Management</a>
-            <a href="../index.html">Event & Venue</a>
-            <a href="#" class="active">Songs</a>
-        </nav>
+            <nav>
+                <a href="../../index.html">Dashboard</a>
+                <a href="../../artist_management/index.html">Artist Management</a>
+                <a href="../index.html">Event & Venue</a>
+                <a href="#" class="active">Songs</a>
+            </nav>
 
-        <a href="../../../login/index.html" class="logout">
-            Logout
-        </a>
+            <a href="../../../login/index.html" class="logout">
+                Logout
+            </a>
 
-    </aside>
-
-
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-
-        <header>
-
-            <div>
-                <h1>🎵 Songs</h1>
-                <p>Manage songs performed by artists.</p>
-            </div>
-
-            <button id="addSongBtn">
-                + Add Song
-            </button>
-
-        </header>
+        </aside>
 
 
-        <!-- TABLE -->
-        <section class="table-section">
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
 
-            <h2>Song Records</h2>
+            <header>
 
-            <div class="table-container">
+                <div>
+                    <h1>🎵 Songs</h1>
+                    <p>Manage songs performed by artists.</p>
+                </div>
 
-                <table>
+                <button id="addSongBtn">
+                    + Add Song
+                </button>
 
-                    <thead>
-                        <tr>
-                            <th>Song ID</th>
-                            <th>Song Name</th>
-                            <th>Artist ID</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="songTableBody">
-                        <!-- Song records will appear here -->
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
+            </header>
 
 
-<!-- ADD / EDIT SONG MODAL -->
-<div class="modal" id="songModal">
+            <!-- TABLE -->
+            <section class="table-section">
 
-    <div class="modal-content">
+                <h2>Song Records</h2>
 
-        <span class="close" id="closeModal">&times;</span>
+                <div class="table-container">
 
-        <h2>Add Song</h2>
+                    <table>
 
-        <form id="songForm">
+                        <thead>
+                            <tr>
+                                <th>Song ID</th>
+                                <th>Song Name</th>
+                                <th>Artist</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
 
-            <label>Song ID</label>
+                        <tbody id="songTableBody">
+                            <!-- Song records will appear here -->
+                        </tbody>
 
-            <input
-                type="text"
-                id="songId"
-                maxlength="6"
-                placeholder="e.g. SG0001"
-                required
-            >
+                    </table>
 
+                </div>
 
-            <label>Song Name</label>
+            </section>
 
-            <input
-                type="text"
-                id="songName"
-                maxlength="100"
-                placeholder="Enter song name"
-                required
-            >
-
-
-            <label>Artist ID</label>
-
-            <input
-                type="text"
-                id="artistId"
-                maxlength="5"
-                placeholder="e.g. AR001"
-                required
-            >
-
-
-            <button type="submit" class="save-btn">
-                Add Song
-            </button>
-
-        </form>
+        </main>
 
     </div>
 
-</div>
+
+    <!-- ADD / EDIT SONG MODAL -->
+    <div class="modal" id="songModal">
+
+        <div class="modal-content">
+
+            <span class="close" id="closeModal">&times;</span>
+
+            <h2>Add Song</h2>
+
+            <form id="songForm">
+
+                <label>Song ID</label>
+
+                <input type="text" id="songId" maxlength="6" placeholder="e.g. SG0001" required>
 
 
-<script src="script.js"></script>
+                <label>Song Name</label>
+
+                <input type="text" id="songName" maxlength="100" placeholder="Enter song name" required>
+
+
+                <label>Artist</label>
+
+                <select id="artistId" required>
+                    <option value="">Select Artist</option>
+                </select>
+
+
+                <button type="submit" class="save-btn">
+                    Add Song
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
 
 </body>
 

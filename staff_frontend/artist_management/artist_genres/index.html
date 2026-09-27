@@ -60,8 +60,8 @@
 
                         <thead>
                             <tr>
-                                <th>Artist ID</th>
-                                <th>Genre ID</th>
+                                <th>Artist</th>
+                                <th>Genre</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -94,26 +94,18 @@
 
             <form id="artistGenreForm">
 
-                <label>Artist ID</label>
+                <label>Artist</label>
 
-                <input
-                    type="text"
-                    id="artistId"
-                    maxlength="5"
-                    placeholder="e.g. AR001"
-                    required
-                >
+                <select id="artistId" required>
+                    <option value="">Select Artist</option>
+                </select>
 
 
-                <label>Genre ID</label>
+                <label>Genre</label>
 
-                <input
-                    type="text"
-                    id="genreId"
-                    maxlength="4"
-                    placeholder="e.g. G001"
-                    required
-                >
+                <select id="genreId" required>
+                    <option value="">Select Genre</option>
+                </select>
 
 
                 <button type="submit" class="save-btn">

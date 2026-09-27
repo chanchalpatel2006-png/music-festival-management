@@ -188,12 +188,36 @@ td {
 
 #ticketForm input,
 #ticketForm select {
+    display: block;
+
+    width: 100%;
+
     padding: 12px;
+
     margin-bottom: 18px;
+
     border: none;
     border-radius: 7px;
+
     font-size: 15px;
+
     background-color: white;
+    color: #111827;
+}
+
+#ticketForm input:focus,
+#ticketForm select:focus {
+    outline: 2px solid #60a5fa;
+}
+
+#ticketForm select {
+    height: 43px;
+    cursor: pointer;
+}
+
+#ticketForm select option {
+    background-color: white;
+    color: #111827;
 }
 
 .error-message {

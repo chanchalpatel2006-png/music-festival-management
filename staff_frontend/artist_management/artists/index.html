@@ -69,7 +69,7 @@
                                 <th>Artist Name</th>
                                 <th>Type</th>
                                 <th>Country</th>
-                                <th>Manager ID</th>
+                                <th>Manager</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -103,22 +103,11 @@
             <form id="artistForm">
 
                 <label>Artist ID</label>
-                <input
-                    type="text"
-                    id="artistId"
-                    maxlength="5"
-                    placeholder="e.g. AR001"
-                    required
-                >
+                <input type="text" id="artistId" maxlength="5" placeholder="e.g. AR001" required>
 
 
                 <label>Artist Name</label>
-                <input
-                    type="text"
-                    id="artistName"
-                    placeholder="Enter artist name"
-                    required
-                >
+                <input type="text" id="artistName" placeholder="Enter artist name" required>
 
 
                 <label>Artist Type</label>
@@ -131,21 +120,14 @@
 
 
                 <label>Country</label>
-                <input
-                    type="text"
-                    id="artistCountry"
-                    placeholder="Enter country"
-                    required
-                >
+                <input type="text" id="artistCountry" placeholder="Enter country" required>
 
 
-                <label>Manager ID</label>
-                <input
-                    type="text"
-                    id="managerId"
-                    maxlength="5"
-                    placeholder="e.g. MN001"
-                >
+                <label>Manager</label>
+
+                <select id="managerId">
+                    <option value="">No Manager</option>
+                </select>
 
 
                 <button type="submit" class="save-btn">

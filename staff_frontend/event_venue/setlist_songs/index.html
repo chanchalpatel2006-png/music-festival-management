@@ -12,134 +12,117 @@
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <aside class="sidebar">
+        <aside class="sidebar">
 
-        <h2>Concert Admin</h2>
+            <h2>Concert Admin</h2>
 
-        <nav>
-            <a href="../../index.html">Dashboard</a>
-            <a href="../../artist_management/index.html">Artist Management</a>
-            <a href="../index.html">Event & Venue</a>
-            <a href="#" class="active">Setlist Songs</a>
-        </nav>
+            <nav>
+                <a href="../../index.html">Dashboard</a>
+                <a href="../../artist_management/index.html">Artist Management</a>
+                <a href="../index.html">Event & Venue</a>
+                <a href="#" class="active">Setlist Songs</a>
+            </nav>
 
-        <a href="../../../login/index.html" class="logout">
-            Logout
-        </a>
+            <a href="../../../login/index.html" class="logout">
+                Logout
+            </a>
 
-    </aside>
-
-
-    <main class="main-content">
-
-        <header>
-
-            <div>
-                <h1>🎶 Setlist Songs</h1>
-                <p>Assign songs and their order to setlists.</p>
-            </div>
-
-            <button id="addSetlistSongBtn">
-                + Add Setlist Song
-            </button>
-
-        </header>
+        </aside>
 
 
-        <section class="table-section">
+        <main class="main-content">
 
-            <h2>Setlist Song Records</h2>
+            <header>
 
-            <div class="table-container">
+                <div>
+                    <h1>🎶 Setlist Songs</h1>
+                    <p>Assign songs and their order to setlists.</p>
+                </div>
 
-                <table>
+                <button id="addSetlistSongBtn">
+                    + Add Setlist Song
+                </button>
 
-                    <thead>
-                        <tr>
-                            <th>Setlist ID</th>
-                            <th>Song ID</th>
-                            <th>Song Order</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="setlistSongTableBody">
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
+            </header>
 
 
-<!-- MODAL -->
+            <section class="table-section">
 
-<div class="modal" id="setlistSongModal">
+                <h2>Setlist Song Records</h2>
 
-    <div class="modal-content">
+                <div class="table-container">
 
-        <span class="close" id="closeModal">&times;</span>
+                    <table>
 
-        <h2>Add Setlist Song</h2>
+                        <thead>
+                            <tr>
+                                <th>Setlist ID</th>
+                                <th>Song</th>
+                                <th>Song Order</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
 
-        <form id="setlistSongForm">
+                        <tbody id="setlistSongTableBody">
+                        </tbody>
 
-            <label>Setlist ID</label>
+                    </table>
 
-            <input
-                type="text"
-                id="setlistId"
-                maxlength="6"
-                placeholder="e.g. SL0001"
-                required
-            >
+                </div>
 
+            </section>
 
-            <label>Song ID</label>
-
-            <input
-                type="text"
-                id="songId"
-                maxlength="6"
-                placeholder="e.g. SG0001"
-                required
-            >
-
-
-            <label>Song Order</label>
-
-            <input
-                type="number"
-                id="songOrder"
-                min="1"
-                step="1"
-                placeholder="e.g. 1"
-                required
-            >
-
-
-            <p id="formError" class="error-message"></p>
-
-
-            <button type="submit" class="save-btn">
-                Add Setlist Song
-            </button>
-
-        </form>
+        </main>
 
     </div>
 
-</div>
+
+    <!-- MODAL -->
+
+    <div class="modal" id="setlistSongModal">
+
+        <div class="modal-content">
+
+            <span class="close" id="closeModal">&times;</span>
+
+            <h2>Add Setlist Song</h2>
+
+            <form id="setlistSongForm">
+
+                <label>Setlist ID</label>
+
+                <input type="text" id="setlistId" maxlength="6" placeholder="e.g. SL0001" required>
 
 
-<script src="script.js"></script>
+                <label>Song</label>
+
+                <select id="songId" required>
+                    <option value="">Select Song</option>
+                </select>
+
+
+                <label>Song Order</label>
+
+                <input type="number" id="songOrder" min="1" step="1" placeholder="e.g. 1" required>
+
+
+                <p id="formError" class="error-message"></p>
+
+
+                <button type="submit" class="save-btn">
+                    Add Setlist Song
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
 
 </body>
 

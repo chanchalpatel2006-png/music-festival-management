@@ -247,8 +247,10 @@ td {
     margin-bottom: 7px;
     font-weight: bold;
 }
+#songForm input,
+#songForm select {
+    width: 100%;
 
-#songForm input {
     padding: 12px;
 
     margin-bottom: 18px;
@@ -256,11 +258,25 @@ td {
     border: none;
     border-radius: 7px;
 
-    font-size: 15px;
+    background-color: white;
+    color: #111827;
+
+    font-size: 16px;
 }
 
-#songForm input:focus {
+#songForm input:focus,
+#songForm select:focus {
     outline: 2px solid #60a5fa;
+}
+
+#songForm select {
+    height: 45px;
+    cursor: pointer;
+}
+
+#songForm select option {
+    background-color: white;
+    color: #111827;
 }
 
 

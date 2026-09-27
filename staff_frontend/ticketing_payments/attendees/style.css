@@ -251,6 +251,10 @@ td {
 }
 
 #attendeeForm input {
+    display: block;
+
+    width: 100%;
+
     padding: 12px;
 
     margin-bottom: 18px;
@@ -259,6 +263,9 @@ td {
     border-radius: 7px;
 
     font-size: 15px;
+
+    background-color: white;
+    color: #111827;
 }
 
 #attendeeForm input:focus {

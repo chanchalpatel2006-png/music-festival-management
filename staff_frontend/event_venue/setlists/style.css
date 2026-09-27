@@ -247,7 +247,12 @@ td {
     font-weight: bold;
 }
 
-#setlistForm input {
+#setlistForm input,
+#setlistForm select {
+    display: block;
+
+    width: 100%;
+
     padding: 12px;
 
     margin-bottom: 18px;
@@ -256,10 +261,24 @@ td {
     border-radius: 7px;
 
     font-size: 15px;
+
+    background-color: white;
+    color: #111827;
 }
 
-#setlistForm input:focus {
+#setlistForm input:focus,
+#setlistForm select:focus {
     outline: 2px solid #60a5fa;
+}
+
+#setlistForm select {
+    height: 43px;
+    cursor: pointer;
+}
+
+#setlistForm select option {
+    background-color: white;
+    color: #111827;
 }
 
 

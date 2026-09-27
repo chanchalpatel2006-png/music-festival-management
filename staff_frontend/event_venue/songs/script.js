@@ -1,159 +1,547 @@
-const addSongBtn = document.getElementById("addSongBtn");
-const songModal = document.getElementById("songModal");
-const closeModal = document.getElementById("closeModal");
+const API_URL = "http://localhost:3000/api/song";
+const ARTIST_API_URL = "http://localhost:3000/api/artists";
 
-const songForm = document.getElementById("songForm");
-const songTableBody = document.getElementById("songTableBody");
+const addSongBtn =
+    document.getElementById("addSongBtn");
+
+const songModal =
+    document.getElementById("songModal");
+
+const closeModal =
+    document.getElementById("closeModal");
+
+const songForm =
+    document.getElementById("songForm");
+
+const songTableBody =
+    document.getElementById("songTableBody");
+
+const artistSelect =
+    document.getElementById("artistId");
 
 let editingRow = null;
 
-
-// ------------------------------------
-// OPEN ADD SONG
-// ------------------------------------
-
-addSongBtn.addEventListener("click", function () {
-
-    editingRow = null;
-
-    songForm.reset();
-
-    document.querySelector("#songModal h2").textContent =
-        "Add Song";
-
-    document.querySelector(".save-btn").textContent =
-        "Add Song";
-
-    songModal.style.display = "flex";
-});
+let artistsList = [];
 
 
-// ------------------------------------
-// CLOSE MODAL
-// ------------------------------------
+// ====================================
+// LOAD ARTISTS
+// ====================================
 
-closeModal.addEventListener("click", function () {
-    songModal.style.display = "none";
-});
+async function loadArtists() {
 
+    try {
 
-window.addEventListener("click", function (event) {
+        const response =
+            await fetch(ARTIST_API_URL);
 
-    if (event.target === songModal) {
-        songModal.style.display = "none";
+        if (!response.ok) {
+            throw new Error("Failed to load artists");
+        }
+
+        artistsList =
+            await response.json();
+
+        artistSelect.innerHTML = `
+            <option value="">Select Artist</option>
+        `;
+
+        artistsList.forEach(artist => {
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                artist.artist_id;
+
+            option.textContent =
+                `${artist.artist_name} (${artist.artist_id})`;
+
+            artistSelect.appendChild(option);
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Could not load artists from database."
+        );
+
     }
-
-});
-
-
-// ------------------------------------
-// ADD / UPDATE SONG
-// ------------------------------------
-
-songForm.addEventListener("submit", function (event) {
-
-    event.preventDefault();
+}
 
 
-    const songId =
-        document.getElementById("songId").value;
+// ====================================
+// GET ARTIST NAME
+// ====================================
 
-    const songName =
-        document.getElementById("songName").value;
+function getArtistName(artistId) {
 
-    const artistId =
-        document.getElementById("artistId").value;
+    const artist =
+        artistsList.find(
+            artist => artist.artist_id === artistId
+        );
+
+    return artist
+        ? artist.artist_name
+        : "Unknown Artist";
+}
 
 
-    // EDIT EXISTING SONG
-    if (editingRow !== null) {
+// ====================================
+// LOAD SONGS
+// ====================================
 
-        editingRow.cells[0].textContent = songId;
-        editingRow.cells[1].textContent = songName;
-        editingRow.cells[2].textContent = artistId;
+async function loadSongs() {
+
+    try {
+
+        // Load artists first
+        await loadArtists();
+
+        const response =
+            await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error(
+                "Failed to load songs"
+            );
+        }
+
+        const songs =
+            await response.json();
+
+        songTableBody.innerHTML = "";
+
+        songs.forEach(song => {
+            addRow(song);
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Could not load songs from database."
+        );
+
+    }
+}
+
+
+// ====================================
+// ADD ROW
+// ====================================
+
+function addRow(song) {
+
+    const row =
+        songTableBody.insertRow();
+
+
+    row.insertCell(0).textContent =
+        song.song_id;
+
+
+    row.insertCell(1).textContent =
+        song.song_name;
+
+
+    const artistName =
+        song.artist_name ||
+        getArtistName(song.artist_id);
+
+    row.insertCell(2).textContent =
+        artistName;
+
+
+    // Keep actual FK ID
+    row.dataset.artistId =
+        song.artist_id;
+
+
+    const actionCell =
+        row.insertCell(3);
+
+    actionCell.innerHTML = `
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
+    `;
+}
+
+
+// ====================================
+// OPEN ADD SONG
+// ====================================
+
+addSongBtn.addEventListener(
+    "click",
+    async function () {
 
         editingRow = null;
 
+        songForm.reset();
+
+        await loadArtists();
+
+        document.querySelector(
+            "#songModal h2"
+        ).textContent =
+            "Add Song";
+
+        document.querySelector(
+            ".save-btn"
+        ).textContent =
+            "Add Song";
+
+        songModal.style.display =
+            "flex";
+
     }
+);
 
 
-    // ADD NEW SONG
-    else {
+// ====================================
+// CLOSE MODAL
+// ====================================
 
-        const row = songTableBody.insertRow();
+closeModal.addEventListener(
+    "click",
+    function () {
 
+        songModal.style.display =
+            "none";
 
-        row.insertCell(0).textContent = songId;
-
-        row.insertCell(1).textContent = songName;
-
-        row.insertCell(2).textContent = artistId;
-
-
-        const actionCell = row.insertCell(3);
-
-
-        actionCell.innerHTML = `
-            <button class="edit-btn">Edit</button>
-            <button class="delete-btn">Delete</button>
-        `;
     }
+);
 
 
-    songForm.reset();
+window.addEventListener(
+    "click",
+    function (event) {
 
-    songModal.style.display = "none";
+        if (event.target === songModal) {
 
-});
+            songModal.style.display =
+                "none";
 
-
-// ------------------------------------
-// EDIT / DELETE
-// ------------------------------------
-
-songTableBody.addEventListener("click", function (event) {
-
-    const row = event.target.closest("tr");
-
-
-    // DELETE SONG
-    if (event.target.classList.contains("delete-btn")) {
-
-        const confirmDelete =
-            confirm("Are you sure you want to delete this song?");
-
-        if (confirmDelete) {
-            row.remove();
         }
 
     }
+);
 
 
-    // EDIT SONG
-    if (event.target.classList.contains("edit-btn")) {
+// ====================================
+// ADD / UPDATE SONG
+// ====================================
 
-        editingRow = row;
+songForm.addEventListener(
+    "submit",
+    async function (event) {
 
-
-        document.getElementById("songId").value =
-            row.cells[0].textContent;
-
-        document.getElementById("songName").value =
-            row.cells[1].textContent;
-
-        document.getElementById("artistId").value =
-            row.cells[2].textContent;
+        event.preventDefault();
 
 
-        document.querySelector("#songModal h2").textContent =
-            "Edit Song";
+        const songId =
+            document.getElementById(
+                "songId"
+            ).value.trim();
 
-        document.querySelector(".save-btn").textContent =
-            "Save Changes";
+
+        const songName =
+            document.getElementById(
+                "songName"
+            ).value.trim();
 
 
-        songModal.style.display = "flex";
+        const artistId =
+            artistSelect.value;
+
+
+        try {
+
+            // ====================================
+            // UPDATE
+            // ====================================
+
+            if (editingRow !== null) {
+
+                const oldSongId =
+                    editingRow.cells[0]
+                        .textContent;
+
+
+                const response =
+                    await fetch(API_URL, {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            old_song_id:
+                                oldSongId,
+
+                            song_id:
+                                songId,
+
+                            song_name:
+                                songName,
+
+                            artist_id:
+                                artistId
+
+                        })
+
+                    });
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.error ||
+                        "Song update failed"
+                    );
+
+                }
+
+
+                editingRow.cells[0]
+                    .textContent =
+                    result.song_id;
+
+
+                editingRow.cells[1]
+                    .textContent =
+                    result.song_name;
+
+
+                editingRow.cells[2]
+                    .textContent =
+                    result.artist_name ||
+                    getArtistName(
+                        result.artist_id
+                    );
+
+
+                editingRow.dataset.artistId =
+                    result.artist_id;
+
+
+                editingRow = null;
+
+            }
+
+
+            // ====================================
+            // INSERT
+            // ====================================
+
+            else {
+
+                const response =
+                    await fetch(API_URL, {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            song_id:
+                                songId,
+
+                            song_name:
+                                songName,
+
+                            artist_id:
+                                artistId
+
+                        })
+
+                    });
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.error ||
+                        "Song insertion failed"
+                    );
+
+                }
+
+
+                addRow(result);
+
+            }
+
+
+            songForm.reset();
+
+            songModal.style.display =
+                "none";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(error.message);
+
+        }
 
     }
+);
 
-});
+
+// ====================================
+// EDIT / DELETE
+// ====================================
+
+songTableBody.addEventListener(
+    "click",
+    async function (event) {
+
+        const row =
+            event.target.closest("tr");
+
+        if (!row) return;
+
+
+        // ====================================
+        // DELETE
+        // ====================================
+
+        if (
+            event.target.classList.contains(
+                "delete-btn"
+            )
+        ) {
+
+            const songId =
+                row.cells[0].textContent;
+
+
+            if (!confirm(
+                `Are you sure you want to delete song ${songId}?`
+            )) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/${songId}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.error ||
+                        "Song deletion failed"
+                    );
+
+                }
+
+
+                row.remove();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(error.message);
+
+            }
+
+        }
+
+
+        // ====================================
+        // EDIT
+        // ====================================
+
+        if (
+            event.target.classList.contains(
+                "edit-btn"
+            )
+        ) {
+
+            editingRow = row;
+
+
+            await loadArtists();
+
+
+            document.getElementById(
+                "songId"
+            ).value =
+                row.cells[0].textContent;
+
+
+            document.getElementById(
+                "songName"
+            ).value =
+                row.cells[1].textContent;
+
+
+            // Select existing artist
+            artistSelect.value =
+                row.dataset.artistId || "";
+
+
+            document.querySelector(
+                "#songModal h2"
+            ).textContent =
+                "Edit Song";
+
+
+            document.querySelector(
+                ".save-btn"
+            ).textContent =
+                "Save Changes";
+
+
+            songModal.style.display =
+                "flex";
+
+        }
+
+    }
+);
+
+
+// ====================================
+// INITIAL LOAD
+// ====================================
+
+loadSongs();
