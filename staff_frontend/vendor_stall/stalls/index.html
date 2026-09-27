@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stall Management</title>
+    <link rel="stylesheet" href="../crud.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <h2>Concert Admin</h2>
+
+        <nav>
+            <a href="../../index.html">Dashboard</a>
+            <a href="../../artist_management/index.html">Artist Management</a>
+            <a href="../../event_venue/index.html">Event & Venue</a>
+            <a href="../../ticketing_payments/index.html">Ticketing & Payments</a>
+            <a href="../index.html">Vendor & Stall</a>
+            <a href="#" class="active">Stalls</a>
+        </nav>
+
+        <a href="../../../login/index.html" class="logout">Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <header>
+            <div>
+                <h1>🛍️ Stalls</h1>
+                <p>Manage stalls operated by festival vendors.</p>
+            </div>
+
+            <button id="addRecordBtn" class="add-btn">+ Add Stall</button>
+        </header>
+
+        <section class="table-section">
+            <h2>Stall Records</h2>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Stall ID</th>
+                            <th>Vendor ID</th>
+                            <th>Stall Name</th>
+                            <th>Stall Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="recordTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+<div class="modal" id="recordModal">
+    <div class="modal-content">
+
+        <span class="close" id="closeModal">&times;</span>
+        <h2 id="modalTitle">Add Stall</h2>
+
+        <form id="recordForm">
+
+            <label>Stall ID</label>
+            <input type="text" id="stall_id"
+                   maxlength="4" placeholder="e.g. SL01" required>
+
+            <label>Vendor ID</label>
+            <input type="text" id="vendor_id"
+                   maxlength="5" placeholder="e.g. VD001" required>
+
+            <label>Stall Name</label>
+            <input type="text" id="stall_name"
+                   maxlength="50" required>
+
+            <label>Stall Type</label>
+            <input type="text" id="stall_type"
+                   maxlength="30" placeholder="e.g. Food" required>
+
+            <p id="formError" class="error-message"></p>
+
+            <button type="submit" id="saveBtn" class="save-btn">
+                Add Stall
+            </button>
+
+        </form>
+    </div>
+</div>
+
+<script>
+window.pageConfig = {
+    name: "Stall",
+
+    fields: [
+        "stall_id",
+        "vendor_id",
+        "stall_name",
+        "stall_type"
+    ],
+
+    validate: function () {
+        return "";
+    }
+};
+</script>
+
+<script src="../crud.js"></script>
+
+</body>
+</html>

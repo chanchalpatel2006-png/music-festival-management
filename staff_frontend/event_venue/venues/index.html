@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Venue Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <h2>Concert Admin</h2>
+
+        <nav>
+            <a href="../../index.html">Dashboard</a>
+            <a href="../../artist_management/index.html">Artist Management</a>
+            <a href="../index.html">Event & Venue</a>
+            <a href="#" class="active">Venues</a>
+        </nav>
+
+        <a href="../../../login/index.html" class="logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header>
+
+            <div>
+                <h1>🏟️ Venues</h1>
+                <p>Manage festival venues and their locations.</p>
+            </div>
+
+            <button id="addVenueBtn">
+                + Add Venue
+            </button>
+
+        </header>
+
+
+        <!-- TABLE -->
+        <section class="table-section">
+
+            <h2>Venue Records</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Venue ID</th>
+                            <th>Venue Name</th>
+                            <th>Location</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="venueTableBody">
+                        <!-- Venue records will appear here -->
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ADD / EDIT VENUE MODAL -->
+<div class="modal" id="venueModal">
+
+    <div class="modal-content">
+
+        <span class="close" id="closeModal">&times;</span>
+
+        <h2>Add Venue</h2>
+
+        <form id="venueForm">
+
+            <label>Venue ID</label>
+
+            <input
+                type="text"
+                id="venueId"
+                maxlength="6"
+                placeholder="e.g. VN0001"
+                required
+            >
+
+
+            <label>Venue Name</label>
+
+            <input
+                type="text"
+                id="venueName"
+                maxlength="50"
+                placeholder="Enter venue name"
+                required
+            >
+
+
+            <label>Location</label>
+
+            <input
+                type="text"
+                id="venueLocation"
+                maxlength="100"
+                placeholder="Enter venue location"
+                required
+            >
+
+
+            <button type="submit" class="save-btn">
+                Add Venue
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Event Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <h2>Concert Admin</h2>
+
+        <nav>
+            <a href="../../index.html">Dashboard</a>
+            <a href="../../artist_management/index.html">Artist Management</a>
+            <a href="../index.html">Event & Venue</a>
+            <a href="#" class="active">Events</a>
+        </nav>
+
+        <a href="../../../login/index.html" class="logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header>
+
+            <div>
+                <h1>🎪 Events</h1>
+                <p>Manage festival events, schedules and venues.</p>
+            </div>
+
+            <button id="addEventBtn">
+                + Add Event
+            </button>
+
+        </header>
+
+
+        <!-- TABLE -->
+        <section class="table-section">
+
+            <h2>Event Records</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Event ID</th>
+                            <th>Event Name</th>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Venue ID</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="eventTableBody">
+                        <!-- Event records appear here -->
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ADD / EDIT EVENT MODAL -->
+<div class="modal" id="eventModal">
+
+    <div class="modal-content">
+
+        <span class="close" id="closeModal">&times;</span>
+
+        <h2>Add Event</h2>
+
+        <form id="eventForm">
+
+            <label>Event ID</label>
+            <input
+                type="text"
+                id="eventId"
+                maxlength="6"
+                placeholder="e.g. EV0001"
+                required
+            >
+
+
+            <label>Event Name</label>
+            <input
+                type="text"
+                id="eventName"
+                maxlength="50"
+                placeholder="Enter event name"
+                required
+            >
+
+
+            <label>Event Date</label>
+            <input
+                type="date"
+                id="eventDate"
+                required
+            >
+
+
+            <label>Start Time</label>
+            <input
+                type="time"
+                id="startTime"
+                required
+            >
+
+
+            <label>End Time</label>
+            <input
+                type="time"
+                id="endTime"
+                required
+            >
+
+
+            <label>Venue ID</label>
+            <input
+                type="text"
+                id="venueId"
+                maxlength="6"
+                placeholder="e.g. VN0001"
+                required
+            >
+
+
+            <p id="timeError" class="error-message"></p>
+
+
+            <button type="submit" class="save-btn">
+                Add Event
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 250px;
+    background-color: #1f2937;
+    padding: 30px 20px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+
+    padding: 13px 15px;
+    border-radius: 7px;
+}
+
+.sidebar a:hover,
+.sidebar .active {
+    background-color: #374151;
+}
+
+.logout {
+    margin-top: auto;
+}
+
+
+/* MAIN AREA */
+
+.main-content {
+    flex: 1;
+
+    padding: 40px;
+
+    background: linear-gradient(
+        135deg,
+        #061a40,
+        #0b3d91,
+        #1e73d8
+    );
+}
+
+header {
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 34px;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #cfe8ff;
+}
+
+
+/* CARDS */
+
+.management-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(260px, 1fr));
+
+    gap: 25px;
+}
+
+.management-card {
+    min-height: 210px;
+
+    padding: 30px;
+
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.13);
+
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    backdrop-filter: blur(12px);
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.management-card:hover {
+    transform: translateY(-7px);
+
+    background: rgba(50, 140, 255, 0.35);
+
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.icon {
+    font-size: 40px;
+    margin-bottom: 18px;
+}
+
+.management-card h2 {
+    margin-bottom: 10px;
+}
+
+.management-card p {
+    color: #dbeafe;
+}
+
+.edit-btn,
+.delete-btn {
+    border: none;
+    padding: 8px 13px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.edit-btn {
+    background-color: #2563eb;
+}
+
+.edit-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.delete-btn {
+    background-color: #dc2626;
+}
+
+.delete-btn:hover {
+    background-color: #b91c1c;
+}

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events | Festivo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a href="../index.html" class="logo">🎵 Festivo</a>
+
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Events</a>
+        <a href="../artists/index.html">Artists</a>
+        <a href="../booking/index.html">My Ticket</a>
+        <a href="../../login/index.html" class="logout">Logout</a>
+    </div>
+</nav>
+
+
+<section class="page-hero">
+    <p>LIVE EXPERIENCES</p>
+    <h1>Upcoming Events</h1>
+    <span>Find your next unforgettable concert or music festival.</span>
+</section>
+
+
+<main class="events-section">
+
+    <div class="section-top">
+        <div>
+            <h2>Discover Events</h2>
+            <p>Choose an event to view performances and book tickets.</p>
+        </div>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search events..."
+        >
+    </div>
+
+
+    <div class="events-grid" id="eventsGrid">
+
+        <article
+            class="event-card"
+            data-name="Mumbai Music Festival"
+            data-event="Mumbai Music Festival"
+            data-date="15 October 2026"
+            data-time="06:00 PM"
+            data-venue="Jio World Garden"
+            data-stage="Main Stage"
+            data-artists="The Driver Era, Sabrina Carpenter"
+        >
+            <div class="event-banner">🎵</div>
+
+            <div class="event-content">
+                <span class="event-tag">MUSIC FESTIVAL</span>
+
+                <h3>Mumbai Music Festival</h3>
+
+                <p>📅 15 October 2026</p>
+                <p>🕕 06:00 PM</p>
+                <p>📍 Jio World Garden</p>
+
+                <div class="artist-line">
+                    🎤 The Driver Era • Sabrina Carpenter
+                </div>
+
+                <button class="view-btn">View Event</button>
+            </div>
+        </article>
+
+
+        <article
+            class="event-card"
+            data-name="Bollywood Live Night"
+            data-event="Bollywood Live Night"
+            data-date="22 October 2026"
+            data-time="07:00 PM"
+            data-venue="Phoenix Arena"
+            data-stage="Open Air"
+            data-artists="Armaan Malik"
+        >
+            <div class="event-banner">🎤</div>
+
+            <div class="event-content">
+                <span class="event-tag">LIVE CONCERT</span>
+
+                <h3>Bollywood Live Night</h3>
+
+                <p>📅 22 October 2026</p>
+                <p>🕖 07:00 PM</p>
+                <p>📍 Phoenix Arena</p>
+
+                <div class="artist-line">
+                    🎤 Armaan Malik
+                </div>
+
+                <button class="view-btn">View Event</button>
+            </div>
+        </article>
+
+
+        <article
+            class="event-card"
+            data-name="Weekend Music Carnival"
+            data-event="Weekend Music Carnival"
+            data-date="7 November 2026"
+            data-time="05:00 PM"
+            data-venue="City Festival Grounds"
+            data-stage="Main Stage"
+            data-artists="The Driver Era, Armaan Malik"
+        >
+            <div class="event-banner">🎪</div>
+
+            <div class="event-content">
+                <span class="event-tag">FESTIVAL</span>
+
+                <h3>Weekend Music Carnival</h3>
+
+                <p>📅 7 November 2026</p>
+                <p>🕔 05:00 PM</p>
+                <p>📍 City Festival Grounds</p>
+
+                <div class="artist-line">
+                    🎤 The Driver Era • Armaan Malik
+                </div>
+
+                <button class="view-btn">View Event</button>
+            </div>
+        </article>
+
+    </div>
+
+</main>
+
+
+<!-- EVENT DETAILS MODAL -->
+
+<div class="modal" id="eventModal">
+
+    <div class="modal-content">
+
+        <button class="close-btn" id="closeModal">&times;</button>
+
+        <span class="event-tag">EVENT DETAILS</span>
+
+        <h2 id="modalEventName"></h2>
+
+        <div class="details-grid">
+            <div>
+                <small>DATE</small>
+                <p id="modalDate"></p>
+            </div>
+
+            <div>
+                <small>START TIME</small>
+                <p id="modalTime"></p>
+            </div>
+
+            <div>
+                <small>VENUE</small>
+                <p id="modalVenue"></p>
+            </div>
+
+            <div>
+                <small>STAGE</small>
+                <p id="modalStage"></p>
+            </div>
+        </div>
+
+        <div class="performance-box">
+            <small>PERFORMING ARTISTS</small>
+            <h3 id="modalArtists"></h3>
+        </div>
+
+        <button id="bookEventBtn" class="book-btn">
+            Book Tickets →
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

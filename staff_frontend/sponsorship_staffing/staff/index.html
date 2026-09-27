@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Staff Management</title>
+
+    <link rel="stylesheet" href="../crud.css">
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <aside class="sidebar">
+
+        <h2>Concert Admin</h2>
+
+        <nav>
+
+            <a href="../../index.html">
+                Dashboard
+            </a>
+
+            <a href="../index.html">
+                Sponsorships & Staffing
+            </a>
+
+            <a href="#" class="active">
+                Staff
+            </a>
+
+        </nav>
+
+
+        <a href="../../../login/index.html"
+           class="logout">
+
+            Logout
+
+        </a>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <header>
+
+            <div>
+
+                <h1>👥 Staff</h1>
+
+                <p>
+                    Manage festival staff members and roles.
+                </p>
+
+            </div>
+
+
+            <button id="addRecordBtn"
+                    class="add-btn">
+
+                + Add Staff
+
+            </button>
+
+        </header>
+
+
+        <section class="table-section">
+
+            <h2>Staff Records</h2>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Staff ID</th>
+                            <th>Staff Name</th>
+                            <th>Role</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="recordTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div class="modal" id="recordModal">
+
+    <div class="modal-content">
+
+
+        <span class="close"
+              id="closeModal">
+            &times;
+        </span>
+
+
+        <h2 id="modalTitle">
+            Add Staff
+        </h2>
+
+
+        <form id="recordForm">
+
+
+            <label>Staff ID</label>
+
+            <input
+                type="text"
+                id="staff_id"
+                maxlength="6"
+                placeholder="e.g. SF0001"
+                required
+            >
+
+
+            <label>Staff Name</label>
+
+            <input
+                type="text"
+                id="staff_name"
+                maxlength="50"
+                required
+            >
+
+
+            <label>Role</label>
+
+            <select id="role" required>
+
+                <option value="">
+                    Select staff role
+                </option>
+
+                <option value="Event Manager">
+                    Event Manager
+                </option>
+
+                <option value="Event Coordinator">
+                    Event Coordinator
+                </option>
+
+                <option value="Stage Manager">
+                    Stage Manager
+                </option>
+
+                <option value="Technical Staff">
+                    Technical Staff
+                </option>
+
+                <option value="Security Staff">
+                    Security Staff
+                </option>
+
+                <option value="Medical Staff">
+                    Medical Staff
+                </option>
+
+                <option value="Hospitality Staff">
+                    Hospitality Staff
+                </option>
+
+                <option value="Volunteer">
+                    Volunteer
+                </option>
+
+            </select>
+
+
+            <label>Phone</label>
+
+            <input
+                type="tel"
+                id="phone"
+                maxlength="15"
+                required
+            >
+
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                id="email"
+                maxlength="50"
+                required
+            >
+
+
+            <p id="formError"
+               class="error-message">
+            </p>
+
+
+            <button
+                type="submit"
+                id="saveBtn"
+                class="save-btn"
+            >
+                Add Staff
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+window.pageConfig = {
+
+    name: "Staff",
+
+    fields: [
+        "staff_id",
+        "staff_name",
+        "role",
+        "phone",
+        "email"
+    ],
+
+    primaryKey: [
+        "staff_id"
+    ],
+
+    validate: function (values) {
+
+        if (!values.email.includes("@")) {
+
+            return "Email must contain @.";
+
+        }
+
+        return "";
+
+    }
+
+};
+
+</script>
+
+
+<script src="../crud.js"></script>
+
+</body>
+
+</html>

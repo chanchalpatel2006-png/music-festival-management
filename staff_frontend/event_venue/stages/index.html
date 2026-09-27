@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Stage Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <h2>Concert Admin</h2>
+
+        <nav>
+            <a href="../../index.html">Dashboard</a>
+            <a href="../../artist_management/index.html">Artist Management</a>
+            <a href="../index.html">Event & Venue</a>
+            <a href="#" class="active">Stages</a>
+        </nav>
+
+        <a href="../../../login/index.html" class="logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header>
+
+            <div>
+                <h1>🎭 Stages</h1>
+                <p>Manage festival stages, capacities and stage types.</p>
+            </div>
+
+            <button id="addStageBtn">
+                + Add Stage
+            </button>
+
+        </header>
+
+
+        <!-- TABLE -->
+        <section class="table-section">
+
+            <h2>Stage Records</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Stage ID</th>
+                            <th>Stage Name</th>
+                            <th>Venue ID</th>
+                            <th>Capacity</th>
+                            <th>Stage Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="stageTableBody">
+                        <!-- Stage records will appear here -->
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ADD / EDIT STAGE MODAL -->
+<div class="modal" id="stageModal">
+
+    <div class="modal-content">
+
+        <span class="close" id="closeModal">&times;</span>
+
+        <h2>Add Stage</h2>
+
+        <form id="stageForm">
+
+            <label>Stage ID</label>
+
+            <input
+                type="text"
+                id="stageId"
+                maxlength="6"
+                placeholder="e.g. ST0001"
+                required
+            >
+
+
+            <label>Stage Name</label>
+
+            <input
+                type="text"
+                id="stageName"
+                maxlength="50"
+                placeholder="Enter stage name"
+                required
+            >
+
+
+            <label>Venue ID</label>
+
+            <input
+                type="text"
+                id="venueId"
+                maxlength="6"
+                placeholder="e.g. VN0001"
+                required
+            >
+
+
+            <label>Capacity</label>
+
+            <input
+                type="number"
+                id="capacity"
+                min="1"
+                placeholder="Enter stage capacity"
+                required
+            >
+
+
+            <label>Stage Type</label>
+
+            <select id="stageType" required>
+
+                <option value="">Select stage type</option>
+
+                <option value="Main Stage">
+                    Main Stage
+                </option>
+
+                <option value="Secondary Stage">
+                    Secondary Stage
+                </option>
+
+                <option value="Open Air">
+                    Open Air
+                </option>
+
+                <option value="Indoor">
+                    Indoor
+                </option>
+
+                <option value="Amphitheatre">
+                    Amphitheatre
+                </option>
+
+            </select>
+
+
+            <p id="capacityError" class="error-message"></p>
+
+
+            <button type="submit" class="save-btn">
+                Add Stage
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

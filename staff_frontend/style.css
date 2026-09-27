@@ -132,3 +132,133 @@ th {
 tr:hover {
     background-color: #f9fafb;
 }
+/* =========================
+   ADMIN DASHBOARD
+========================= */
+
+body {
+    background: linear-gradient(135deg, #061a40, #0b3d91, #1e73d8);
+}
+
+/* Main dashboard area */
+.main-content {
+    background: linear-gradient(135deg, #0b2860, #164fa8, #2874d8);
+    min-height: 100vh;
+}
+
+/* Dashboard heading */
+header h1 {
+    color: white;
+}
+
+header p {
+    color: #cfe8ff;
+}
+
+/* White content box */
+.content {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    color: white;
+}
+
+.content > h2 {
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+
+/* Container for all cards */
+.dashboard-cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+
+    gap: 22px;
+}
+
+
+/* Individual card */
+.dashboard-card {
+    background: linear-gradient(
+        135deg,
+        #2589ff,
+        #0647a8
+    );
+
+    padding: 28px;
+
+    min-height: 190px;
+
+    border-radius: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Card hover effect */
+.dashboard-card:hover {
+    transform: translateY(-7px);
+
+    background: linear-gradient(
+        135deg,
+        #40a2ff,
+        #0757c9
+    );
+
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Icons */
+.card-icon {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+
+/* Card heading */
+.dashboard-card h3 {
+    font-size: 21px;
+    margin-bottom: 10px;
+}
+
+
+/* Card description */
+.dashboard-card p {
+    color: #dbeafe;
+    line-height: 1.5;
+}
+
+
+/* Sidebar logout */
+.logout {
+    display: block;
+
+    margin-top: 40px;
+
+    color: #ffb4b4;
+
+    text-decoration: none;
+
+    padding: 12px 15px;
+
+    border-radius: 6px;
+}
+
+.logout:hover {
+    background-color: #374151;
+    color: white;
+}

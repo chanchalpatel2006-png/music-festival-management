@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ticket Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <h2>Concert Admin</h2>
+
+        <nav>
+            <a href="../../index.html">Dashboard</a>
+            <a href="../../artist_management/index.html">Artist Management</a>
+            <a href="../../event_venue/index.html">Event & Venue</a>
+            <a href="../index.html">Ticketing & Payments</a>
+            <a href="#" class="active">Tickets</a>
+        </nav>
+
+        <a href="../../../login/index.html" class="logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header>
+
+            <div>
+                <h1>🎟️ Tickets</h1>
+                <p>Manage purchased tickets and ticket status.</p>
+            </div>
+
+            <button id="addTicketBtn">
+                + Add Ticket
+            </button>
+
+        </header>
+
+
+        <section class="table-section">
+
+            <h2>Ticket Records</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Ticket ID</th>
+                            <th>Attendee ID</th>
+                            <th>Ticket Type ID</th>
+                            <th>Purchase Date</th>
+                            <th>Entry Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="ticketTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div class="modal" id="ticketModal">
+
+    <div class="modal-content">
+
+        <span class="close" id="closeModal">&times;</span>
+
+        <h2>Add Ticket</h2>
+
+        <form id="ticketForm">
+
+            <label>Ticket ID</label>
+
+            <input
+                type="text"
+                id="ticketId"
+                maxlength="8"
+                placeholder="e.g. TK000001"
+                required
+            >
+
+
+            <label>Attendee ID</label>
+
+            <input
+                type="text"
+                id="attendeeId"
+                maxlength="8"
+                placeholder="e.g. AT000001"
+            >
+
+
+            <label>Ticket Type ID</label>
+
+            <input
+                type="text"
+                id="ticketTypeId"
+                maxlength="4"
+                placeholder="e.g. TT01"
+                required
+            >
+
+
+            <label>Purchase Date</label>
+
+            <input
+                type="date"
+                id="purchaseDate"
+                required
+            >
+
+
+            <label>Entry Date</label>
+
+            <input
+                type="date"
+                id="entryDate"
+                required
+            >
+
+
+            <label>Ticket Status</label>
+
+            <select id="ticketStatus" required>
+
+                <option value="">Select ticket status</option>
+                <option value="Used">Used</option>
+                <option value="Active">Active</option>
+                <option value="Cancelled">Cancelled</option>
+
+            </select>
+
+
+            <p id="formError" class="error-message"></p>
+
+
+            <button type="submit" class="save-btn">
+                Add Ticket
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

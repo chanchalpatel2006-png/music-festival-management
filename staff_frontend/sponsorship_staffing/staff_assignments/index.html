@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Staff Assignments</title>
+
+    <link rel="stylesheet" href="../crud.css">
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <aside class="sidebar">
+
+        <h2>Concert Admin</h2>
+
+        <nav>
+
+            <a href="../../index.html">
+                Dashboard
+            </a>
+
+            <a href="../index.html">
+                Sponsorships & Staffing
+            </a>
+
+            <a href="#" class="active">
+                Staff Assignments
+            </a>
+
+        </nav>
+
+
+        <a href="../../../login/index.html"
+           class="logout">
+
+            Logout
+
+        </a>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <header>
+
+            <div>
+
+                <h1>📅 Staff Assignments</h1>
+
+                <p>
+                    Assign staff members to events, stages and shifts.
+                </p>
+
+            </div>
+
+
+            <button id="addRecordBtn"
+                    class="add-btn">
+
+                + Add Assignment
+
+            </button>
+
+        </header>
+
+
+        <section class="table-section">
+
+            <h2>Staff Assignment Records</h2>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Assignment ID</th>
+                            <th>Staff ID</th>
+                            <th>Stage ID</th>
+                            <th>Event ID</th>
+                            <th>Shift Start</th>
+                            <th>Shift End</th>
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="recordTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div class="modal" id="recordModal">
+
+    <div class="modal-content">
+
+
+        <span class="close"
+              id="closeModal">
+
+            &times;
+
+        </span>
+
+
+        <h2 id="modalTitle">
+            Add Staff Assignment
+        </h2>
+
+
+        <form id="recordForm">
+
+
+            <label>Assignment ID</label>
+
+            <input
+                type="text"
+                id="assignment_id"
+                maxlength="6"
+                placeholder="e.g. AS0001"
+                required
+            >
+
+
+            <label>Staff ID</label>
+
+            <input
+                type="text"
+                id="staff_id"
+                maxlength="6"
+                placeholder="e.g. SF0001"
+                required
+            >
+
+
+            <label>Stage ID</label>
+
+            <input
+                type="text"
+                id="stage_id"
+                maxlength="6"
+                placeholder="Optional"
+            >
+
+
+            <label>Event ID</label>
+
+            <input
+                type="text"
+                id="event_id"
+                maxlength="6"
+                placeholder="e.g. EV0001"
+                required
+            >
+
+
+            <label>Shift Start</label>
+
+            <input
+                type="datetime-local"
+                id="shift_start"
+                required
+            >
+
+
+            <label>Shift End</label>
+
+            <input
+                type="datetime-local"
+                id="shift_end"
+                required
+            >
+
+
+            <p id="formError"
+               class="error-message">
+            </p>
+
+
+            <button
+                type="submit"
+                id="saveBtn"
+                class="save-btn"
+            >
+                Add Assignment
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+window.pageConfig = {
+
+    name: "Staff Assignment",
+
+    fields: [
+        "assignment_id",
+        "staff_id",
+        "stage_id",
+        "event_id",
+        "shift_start",
+        "shift_end"
+    ],
+
+    primaryKey: [
+        "assignment_id"
+    ],
+
+    validate: function (values) {
+
+        const start =
+            new Date(values.shift_start);
+
+        const end =
+            new Date(values.shift_end);
+
+
+        if (end <= start) {
+
+            return "Shift end must be after shift start.";
+
+        }
+
+
+        return "";
+
+    }
+
+};
+
+</script>
+
+
+<script src="../crud.js"></script>
+
+</body>
+
+</html>
