@@ -106,8 +106,11 @@ INNER JOIN ticket_type tt
     ON t.ticket_type_id = tt.ticket_type_id;
 
 -- ============================================
--- Query 5: Count tickets and calculate total sales by ticket type
+-- Query 5: Count tickets and calculate total ticket value by type
 -- SQL Concept: Aggregate Functions
+-- Syntax Used: COUNT() + SUM() + GROUP BY + HAVING
+-- Purpose: Find the number of tickets and total ticket
+--          value for each ticket type
 -- ============================================
 
 SELECT
@@ -131,18 +134,22 @@ SELECT DISTINCT
 FROM attendee;
 
 -- ============================================
--- Query 7: Display IDs of attendees who have
--- tickets and tickets that have successful payments
+-- Query 7: Find attendees with Active or Used tickets
 -- SQL Concept: UNION
+-- Syntax Used: SELECT + UNION
+-- Purpose: Combine two result sets and remove duplicate
+--          attendee IDs
 -- ============================================
 
-SELECT attendee_id AS related_id
+SELECT attendee_id
 FROM ticket
+WHERE ticket_status = 'Active'
 
 UNION
 
-SELECT ticket_id AS related_id
-FROM payment;
+SELECT attendee_id
+FROM ticket
+WHERE ticket_status = 'Used';
 
 -- ============================================
 -- Query 8: Find tickets that have a payment
