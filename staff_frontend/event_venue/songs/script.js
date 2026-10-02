@@ -184,6 +184,15 @@ addSongBtn.addEventListener(
 
         songForm.reset();
 
+        try {
+            document.getElementById("songId").value =
+                await generateNextId("song");
+        } catch (error) {
+            console.error(error);
+            alert("Could not generate Song ID.");
+            return;
+        }
+
         await loadArtists();
 
         document.querySelector(

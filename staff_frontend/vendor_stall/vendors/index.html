@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vendor Management</title>
-    <link rel="stylesheet" href="../crud.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -72,7 +72,7 @@
 
             <label>Vendor ID</label>
             <input type="text" id="vendor_id"
-                   maxlength="5" placeholder="e.g. VD001" required>
+                   maxlength="5" readonly required>
 
             <label>Vendor Name</label>
             <input type="text" id="vendor_name"
@@ -125,7 +125,8 @@ window.pageConfig = {
 };
 </script>
 
-<script src="../crud.js"></script>
+<script src="../../../idGenerator.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>

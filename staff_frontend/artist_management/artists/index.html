@@ -21,9 +21,7 @@
 
             <nav>
                 <a href="../../index.html">Dashboard</a>
-
                 <a href="../index.html">Artist Management</a>
-
                 <a href="#" class="active">Artists</a>
             </nav>
 
@@ -41,15 +39,10 @@
 
                 <div>
                     <h1>🎤 Artists</h1>
-
-                    <p>
-                        Manage artist information.
-                    </p>
+                    <p>Manage artist information.</p>
                 </div>
 
-                <button id="addArtistBtn">
-                    + Add Artist
-                </button>
+                <button id="addArtistBtn">+ Add Artist</button>
 
             </header>
 
@@ -75,9 +68,7 @@
                         </thead>
 
                         <tbody id="artistTableBody">
-
                             <!-- Artist records will appear here -->
-
                         </tbody>
 
                     </table>
@@ -91,27 +82,28 @@
     </div>
 
 
-    <!-- Add Artist Modal -->
+    <!-- Add / Edit Artist Modal -->
     <div class="modal" id="artistModal">
 
         <div class="modal-content">
 
             <span class="close" id="closeModal">&times;</span>
 
-            <h2>Add Artist</h2>
+            <h2 id="modalTitle">Add Artist</h2>
 
             <form id="artistForm">
 
-                <label>Artist ID</label>
-                <input type="text" id="artistId" maxlength="5" placeholder="e.g. AR001" required>
+                <label for="artistId">Artist ID</label>
+                <input type="text" id="artistId" maxlength="5"
+                       placeholder="Auto-generated" readonly required>
 
 
-                <label>Artist Name</label>
-                <input type="text" id="artistName" placeholder="Enter artist name" required>
+                <label for="artistName">Artist Name</label>
+                <input type="text" id="artistName"
+                       placeholder="Enter artist name" required>
 
 
-                <label>Artist Type</label>
-
+                <label for="artistType">Artist Type</label>
                 <select id="artistType" required>
                     <option value="">Select Artist Type</option>
                     <option value="SOLO">SOLO</option>
@@ -119,18 +111,18 @@
                 </select>
 
 
-                <label>Country</label>
-                <input type="text" id="artistCountry" placeholder="Enter country" required>
+                <label for="artistCountry">Country</label>
+                <input type="text" id="artistCountry"
+                       placeholder="Enter country" required>
 
 
-                <label>Manager</label>
-
+                <label for="managerId">Manager</label>
                 <select id="managerId">
                     <option value="">No Manager</option>
                 </select>
 
 
-                <button type="submit" class="save-btn">
+                <button type="submit" class="save-btn" id="saveBtn">
                     Add Artist
                 </button>
 

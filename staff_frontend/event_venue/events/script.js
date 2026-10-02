@@ -193,6 +193,15 @@ addEventBtn.addEventListener(
 
         timeError.textContent = "";
 
+        try {
+            document.getElementById("eventId").value =
+                await generateNextId("event");
+        } catch (error) {
+            console.error(error);
+            alert("Could not generate Event ID.");
+            return;
+        }
+
         await loadVenues();
 
         document.querySelector(
@@ -207,7 +216,6 @@ addEventBtn.addEventListener(
 
         eventModal.style.display =
             "flex";
-
     }
 );
 

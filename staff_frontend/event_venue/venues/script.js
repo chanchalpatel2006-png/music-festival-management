@@ -92,11 +92,20 @@ function addRow(venue) {
 
 addVenueBtn.addEventListener(
     "click",
-    function () {
+    async function () {
 
         editingRow = null;
 
         venueForm.reset();
+
+        try {
+            document.getElementById("venueId").value =
+                await generateNextId("venue");
+        } catch (error) {
+            console.error(error);
+            alert("Could not generate Venue ID.");
+            return;
+        }
 
         document.querySelector(
             "#venueModal h2"

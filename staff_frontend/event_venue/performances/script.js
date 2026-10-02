@@ -309,6 +309,15 @@ addPerformanceBtn.addEventListener(
 
         performanceForm.reset();
 
+        try {
+            document.getElementById("performanceId").value =
+                await generateNextId("performance");
+        } catch (error) {
+            console.error(error);
+            alert("Could not generate Performance ID.");
+            return;
+        }
+
         await Promise.all([
             loadEvents(),
             loadArtists(),

@@ -1,153 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stall Setup Management</title>
-    <link rel="stylesheet" href="../crud.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <aside class="sidebar">
-        <h2>Concert Admin</h2>
+        <aside class="sidebar">
+            <h2>Concert Admin</h2>
 
-        <nav>
-            <a href="../../index.html">Dashboard</a>
-            <a href="../../artist_management/index.html">Artist Management</a>
-            <a href="../../event_venue/index.html">Event & Venue</a>
-            <a href="../../ticketing_payments/index.html">Ticketing & Payments</a>
-            <a href="../index.html">Vendor & Stall</a>
-            <a href="#" class="active">Stall Setups</a>
-        </nav>
+            <nav>
+                <a href="../../index.html">Dashboard</a>
+                <a href="../../artist_management/index.html">Artist Management</a>
+                <a href="../../event_venue/index.html">Event & Venue</a>
+                <a href="../../ticketing_payments/index.html">Ticketing & Payments</a>
+                <a href="../index.html">Vendor & Stall</a>
+                <a href="#" class="active">Stall Setups</a>
+            </nav>
 
-        <a href="../../../login/index.html" class="logout">Logout</a>
-    </aside>
+            <a href="../../../login/index.html" class="logout">Logout</a>
+        </aside>
 
-    <main class="main-content">
+        <main class="main-content">
 
-        <header>
-            <div>
-                <h1>🏕️ Stall Setups</h1>
-                <p>Assign stalls to festival venues and dates.</p>
-            </div>
+            <header>
+                <div>
+                    <h1>🏕️ Stall Setups</h1>
+                    <p>Assign stalls to festival venues and dates.</p>
+                </div>
 
-            <button id="addRecordBtn" class="add-btn">
-                + Add Stall Setup
-            </button>
-        </header>
+                <button id="addRecordBtn" class="add-btn">
+                    + Add Stall Setup
+                </button>
+            </header>
 
-        <section class="table-section">
-            <h2>Stall Setup Records</h2>
+            <section class="table-section">
+                <h2>Stall Setup Records</h2>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Setup ID</th>
-                            <th>Stall ID</th>
-                            <th>Venue ID</th>
-                            <th>Stall Rent</th>
-                            <th>Stall Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Setup ID</th>
+                                <th>Stall ID</th>
+                                <th>Venue ID</th>
+                                <th>Stall Rent</th>
+                                <th>Stall Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
 
-                    <tbody id="recordTableBody"></tbody>
-                </table>
-            </div>
-        </section>
+                        <tbody id="recordTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
 
-    </main>
+        </main>
 
-</div>
-
-<div class="modal" id="recordModal">
-    <div class="modal-content">
-
-        <span class="close" id="closeModal">&times;</span>
-        <h2 id="modalTitle">Add Stall Setup</h2>
-
-        <form id="recordForm">
-
-            <label>Setup ID</label>
-            <input type="text" id="setup_id"
-                   maxlength="6" placeholder="e.g. SU0001" required>
-
-            <label>Stall ID</label>
-            <input type="text" id="stall_id"
-                   maxlength="4" placeholder="e.g. SL01" required>
-
-            <label>Venue ID</label>
-            <input type="text" id="venue_id"
-                   maxlength="6" placeholder="e.g. VN0001" required>
-
-            <label>Stall Rent</label>
-            <input type="number" id="stall_rent"
-                   min="0" max="99999999.99" step="0.01"
-                   placeholder="Enter stall rent" required>
-
-            <label>Stall Date</label>
-            <input type="date" id="stall_date" required>
-
-            <p id="formError" class="error-message"></p>
-
-            <button type="submit" id="saveBtn" class="save-btn">
-                Add Stall Setup
-            </button>
-
-        </form>
     </div>
-</div>
 
-<script>
-window.pageConfig = {
-    name: "Stall Setup",
+    <div class="modal" id="recordModal">
+        <div class="modal-content">
 
-    fields: [
-        "setup_id",
-        "stall_id",
-        "venue_id",
-        "stall_rent",
-        "stall_date"
-    ],
+            <span class="close" id="closeModal">&times;</span>
+            <h2 id="modalTitle">Add Stall Setup</h2>
 
-    validate: function (values, rows, editingRow) {
+            <form id="recordForm">
 
-        const rent = Number(values.stall_rent);
+                <label>Setup ID</label>
+                <input type="text" id="setup_id" maxlength="6" readonly required>
 
-        if (!Number.isFinite(rent) || rent < 0 || rent > 99999999.99) {
-            return "Stall rent must be between 0 and 99999999.99.";
-        }
+                <label>Stall</label>
+                <select id="stall_id" required>
+                    <option value="">Select Stall</option>
+                </select>
 
-        for (const row of rows) {
+                <label>Venue</label>
+                <select id="venue_id" required>
+                    <option value="">Select Venue</option>
+                </select>
 
-            if (row === editingRow) {
-                continue;
-            }
+                <label>Stall Rent</label>
+                <input type="number" id="stall_rent" min="0" max="99999999.99" step="0.01"
+                    placeholder="Enter stall rent" required>
 
-            const sameStall =
-                row.cells[1].textContent === values.stall_id;
+                <label>Stall Date</label>
+                <input type="date" id="stall_date" required>
 
-            const sameVenue =
-                row.cells[2].textContent === values.venue_id;
+                <p id="formError" class="error-message"></p>
 
-            const sameDate =
-                row.cells[4].textContent === values.stall_date;
+                <button type="submit" id="saveBtn" class="save-btn">
+                    Add Stall Setup
+                </button>
 
-            if (sameStall && sameVenue && sameDate) {
-                return "This stall already has a setup at this venue on this date.";
-            }
-        }
+            </form>
+        </div>
+    </div>
 
-        return "";
-    }
-};
-</script>
-
-<script src="../crud.js"></script>
+    
+    <script src="../../../idGenerator.js"></script>
+    <script src="script.js"></script>
 
 </body>
+
 </html>

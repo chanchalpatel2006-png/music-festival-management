@@ -1,5 +1,12 @@
-const API_URL = "http://localhost:3000/api/artists";
-const MANAGER_API_URL = "http://localhost:3000/api/manager";
+const BASE_URL = "http://localhost:3000/api";
+
+const API_URL = `${BASE_URL}/artists`;
+
+// Tries these in order until one works
+const MANAGER_ENDPOINTS = [
+    `${BASE_URL}/managers`,
+    `${BASE_URL}/manager`
+];
 
 const addArtistBtn = document.getElementById("addArtistBtn");
 const artistModal = document.getElementById("artistModal");
@@ -7,7 +14,10 @@ const closeModal = document.getElementById("closeModal");
 const artistForm = document.getElementById("artistForm");
 const artistTableBody = document.getElementById("artistTableBody");
 
+const artistIdInput = document.getElementById("artistId");
 const managerSelect = document.getElementById("managerId");
+const modalTitle = document.getElementById("modalTitle");
+const saveBtn = document.getElementById("saveBtn");
 
 let editingRow = null;
 
@@ -16,41 +26,65 @@ let editingRow = null;
 // LOAD MANAGERS
 // ====================================
 
-async function loadManagers() {
+async function fetchManagers() {
+
+    let lastError = null;
+
+    for (const url of MANAGER_ENDPOINTS) {
+
+        try {
+
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status} from ${url}`);
+            }
+
+            const data = await response.json();
+
+            // Accept either an array or { managers: [...] }
+            return Array.isArray(data) ? data : (data.managers || []);
+
+        } catch (error) {
+            lastError = error;
+        }
+    }
+
+    throw lastError || new Error("Failed to load managers");
+}
+
+
+async function loadManagers(selectedId = "") {
 
     try {
 
-        const response = await fetch(MANAGER_API_URL);
+        const managers = await fetchManagers();
 
-        if (!response.ok) {
-            throw new Error("Failed to load managers");
-        }
-
-        const managers = await response.json();
-
-        managerSelect.innerHTML = `
-            <option value="">No Manager</option>
-        `;
+        managerSelect.innerHTML =
+            `<option value="">No Manager</option>`;
 
         managers.forEach(manager => {
 
+            const id = manager.manager_id ?? manager.id;
+            const name = manager.manager_name ?? manager.name ?? id;
+
             const option = document.createElement("option");
-
-            option.value = manager.manager_id;
-
-            option.textContent =
-                `${manager.manager_name} (${manager.manager_id})`;
+            option.value = id;
+            option.textContent = `${name} (${id})`;
 
             managerSelect.appendChild(option);
-
         });
+
+        managerSelect.value = selectedId || "";
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Manager load error:", error);
 
-        alert("Could not load managers from database.");
-
+        managerSelect.innerHTML = `
+            <option value="">No Manager</option>
+            <option value="" disabled>Failed to load managers</option>
+        `;
     }
 }
 
@@ -73,16 +107,12 @@ async function loadArtists() {
 
         artistTableBody.innerHTML = "";
 
-        artists.forEach(artist => {
-            addRow(artist);
-        });
+        artists.forEach(addRow);
 
     } catch (error) {
 
         console.error(error);
-
         alert("Could not load artists from database.");
-
     }
 }
 
@@ -99,24 +129,65 @@ function addRow(artist) {
     row.insertCell(1).textContent = artist.artist_name;
     row.insertCell(2).textContent = artist.artist_type;
     row.insertCell(3).textContent = artist.country;
+    row.insertCell(4).textContent = artist.manager_name || "No Manager";
 
-    // Display manager name
-    row.insertCell(4).textContent =
-        artist.manager_name || "No Manager";
+    // Store actual manager ID for editing
+    row.dataset.managerId = artist.manager_id || "";
 
-    // Store actual manager ID in the row
-    row.dataset.managerId =
-        artist.manager_id || "";
-
-    const actionCell = row.insertCell(5);
-
-    actionCell.innerHTML = `
+    row.insertCell(5).innerHTML = `
         <button class="edit-btn">Edit</button>
         <button class="delete-btn">Delete</button>
     `;
 }
 
+// ====================================
+// GENERATE NEXT ARTIST ID
+// ====================================
 
+async function generateArtistId() {
+
+    let ids = [];
+
+    try {
+        // Fetch fresh from the server so the ID is always up to date
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch artists");
+        }
+
+        const artists = await response.json();
+        ids = artists.map(a => a.artist_id);
+
+    } catch (error) {
+        // Fall back to whatever is currently in the table
+        ids = Array.from(artistTableBody.rows)
+            .map(row => row.cells[0].textContent);
+    }
+
+    // Defaults when the table is empty: AR001
+    let prefix = "AR";
+    let width = 3;
+    let maxNumber = 0;
+
+    ids.forEach(id => {
+
+        // Split e.g. "AR012" into "AR" + "012"
+        const match = /^([A-Za-z]*)(\d+)$/.exec(String(id).trim());
+
+        if (!match) return;
+
+        const number = parseInt(match[2], 10);
+
+        if (number >= maxNumber) {
+            maxNumber = number;
+            prefix = match[1] || prefix;   // keep the existing prefix
+            width = match[2].length;       // keep the existing zero-padding
+        }
+    });
+
+    return prefix + String(maxNumber + 1).padStart(width, "0");
+}
 // ====================================
 // OPEN ADD ARTIST
 // ====================================
@@ -127,33 +198,38 @@ addArtistBtn.addEventListener("click", async function () {
 
     artistForm.reset();
 
-    await loadManagers();
+    modalTitle.textContent = "Add Artist";
+    saveBtn.textContent = "Add Artist";
 
-    document.querySelector("#artistModal h2").textContent =
-        "Add Artist";
-
-    document.querySelector(".save-btn").textContent =
-        "Add Artist";
+    artistIdInput.readOnly = true;
+    artistIdInput.value = "Generating...";
 
     artistModal.style.display = "flex";
-});
 
+    // Fill the ID and load managers at the same time
+    const [newId] = await Promise.all([
+        generateArtistId(),
+        loadManagers()
+    ]);
+
+    artistIdInput.value = newId;
+});
 
 // ====================================
 // CLOSE MODAL
 // ====================================
 
-closeModal.addEventListener("click", function () {
+function hideModal() {
     artistModal.style.display = "none";
-});
+    editingRow = null;
+}
 
+closeModal.addEventListener("click", hideModal);
 
 window.addEventListener("click", function (event) {
-
     if (event.target === artistModal) {
-        artistModal.style.display = "none";
+        hideModal();
     }
-
 });
 
 
@@ -165,143 +241,65 @@ artistForm.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
-    const artistId =
-        document.getElementById("artistId").value.trim();
+    const artistId = artistIdInput.value.trim();
+    const artistName = document.getElementById("artistName").value.trim();
+    const artistType = document.getElementById("artistType").value;
+    const artistCountry = document.getElementById("artistCountry").value.trim();
+    const managerId = managerSelect.value;
 
-    const artistName =
-        document.getElementById("artistName").value.trim();
-
-    const artistType =
-        document.getElementById("artistType").value;
-
-    const artistCountry =
-        document.getElementById("artistCountry").value.trim();
-
-    const managerId =
-        managerSelect.value;
-
+    const payload = {
+        artist_id: artistId,
+        artist_name: artistName,
+        artist_type: artistType,
+        country: artistCountry,
+        manager_id: managerId || null
+    };
 
     try {
 
-        // ====================================
-        // UPDATE
-        // ====================================
+        let response;
 
         if (editingRow !== null) {
 
-            const oldArtistId =
-                editingRow.cells[0].textContent;
+            // UPDATE
+            payload.old_artist_id = editingRow.cells[0].textContent;
 
-            const response = await fetch(API_URL, {
-
+            response = await fetch(API_URL, {
                 method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-
-                    old_artist_id: oldArtistId,
-
-                    artist_id: artistId,
-                    artist_name: artistName,
-                    artist_type: artistType,
-                    country: artistCountry,
-                    manager_id: managerId || null
-
-                })
-
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
             });
 
+        } else {
 
-            const result = await response.json();
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    result.error || "Artist update failed"
-                );
-
-            }
-
-
-            // Update table
-            editingRow.cells[0].textContent = artistId;
-            editingRow.cells[1].textContent = artistName;
-            editingRow.cells[2].textContent = artistType;
-            editingRow.cells[3].textContent = artistCountry;
-
-            editingRow.cells[4].textContent =
-                result.manager_name || "No Manager";
-
-            editingRow.dataset.managerId =
-                managerId || "";
-
-
-            editingRow = null;
-
-        }
-
-
-        // ====================================
-        // INSERT
-        // ====================================
-
-        else {
-
-            const response = await fetch(API_URL, {
-
+            // INSERT
+            response = await fetch(API_URL, {
                 method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-
-                    artist_id: artistId,
-                    artist_name: artistName,
-                    artist_type: artistType,
-                    country: artistCountry,
-                    manager_id: managerId || null
-
-                })
-
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
             });
-
-
-            const result = await response.json();
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    result.error || "Artist insertion failed"
-                );
-
-            }
-
-
-            addRow(result);
-
         }
 
+        const result = await response.json().catch(() => ({}));
 
+        if (!response.ok) {
+            throw new Error(
+                result.error ||
+                (editingRow ? "Artist update failed" : "Artist insertion failed")
+            );
+        }
+
+        hideModal();
         artistForm.reset();
 
-        artistModal.style.display = "none";
-
+        // Reload so the manager name is always correct
+        await loadArtists();
 
     } catch (error) {
 
         console.error(error);
-
         alert(error.message);
-
     }
-
 });
 
 
@@ -316,100 +314,55 @@ artistTableBody.addEventListener("click", async function (event) {
     if (!row) return;
 
 
-    // ====================================
     // DELETE
-    // ====================================
-
     if (event.target.classList.contains("delete-btn")) {
 
-        const artistId =
-            row.cells[0].textContent;
+        const artistId = row.cells[0].textContent;
 
-
-        if (!confirm(
-            `Are you sure you want to delete artist ${artistId}?`
-        )) {
+        if (!confirm(`Are you sure you want to delete artist ${artistId}?`)) {
             return;
         }
 
-
         try {
 
-            const response = await fetch(
-                `${API_URL}/${artistId}`,
-                {
-                    method: "DELETE"
-                }
-            );
+            const response = await fetch(`${API_URL}/${artistId}`, {
+                method: "DELETE"
+            });
 
-
-            const result = await response.json();
-
+            const result = await response.json().catch(() => ({}));
 
             if (!response.ok) {
-
-                throw new Error(
-                    result.error || "Artist deletion failed"
-                );
-
+                throw new Error(result.error || "Artist deletion failed");
             }
 
-
             row.remove();
-
 
         } catch (error) {
 
             console.error(error);
-
             alert(error.message);
-
         }
-
     }
 
 
-    // ====================================
     // EDIT
-    // ====================================
-
     if (event.target.classList.contains("edit-btn")) {
 
         editingRow = row;
 
+        artistIdInput.value = row.cells[0].textContent;
+        document.getElementById("artistName").value = row.cells[1].textContent;
+        document.getElementById("artistType").value = row.cells[2].textContent;
+        document.getElementById("artistCountry").value = row.cells[3].textContent;
 
-        await loadManagers();
-
-
-        document.getElementById("artistId").value =
-            row.cells[0].textContent;
-
-        document.getElementById("artistName").value =
-            row.cells[1].textContent;
-
-        document.getElementById("artistType").value =
-            row.cells[2].textContent;
-
-        document.getElementById("artistCountry").value =
-            row.cells[3].textContent;
-
-
-        // Select the existing manager
-        managerSelect.value =
-            row.dataset.managerId || "";
-
-
-        document.querySelector("#artistModal h2").textContent =
-            "Edit Artist";
-
-        document.querySelector(".save-btn").textContent =
-            "Save Changes";
-
+        modalTitle.textContent = "Edit Artist";
+        saveBtn.textContent = "Save Changes";
 
         artistModal.style.display = "flex";
 
+        // Load managers, then select the artist's current one
+        await loadManagers(row.dataset.managerId || "");
     }
-
 });
 
 

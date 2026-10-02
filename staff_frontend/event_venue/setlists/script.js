@@ -219,20 +219,26 @@ addSetlistBtn.addEventListener(
 
         setlistForm.reset();
 
-        await loadPerformances();
+        try {
+            document.getElementById("setlistId").value =
+                await generateNextId("setlist");
+        } catch (error) {
+            console.error(error);
+            alert("Could not generate Setlist ID.");
+            return;
+        }
 
+        await loadPerformances();
 
         document.querySelector(
             "#setlistModal h2"
         ).textContent =
             "Add Setlist";
 
-
         document.querySelector(
             ".save-btn"
         ).textContent =
             "Add Setlist";
-
 
         setlistModal.style.display =
             "flex";

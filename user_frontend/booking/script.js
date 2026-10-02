@@ -44,8 +44,16 @@ document.getElementById("bookingForm")
             );
 
 
+        const selectedDate =
+            document.querySelector(
+                'input[name="eventDate"]:checked'
+            );
+
+
         const age =
-            Number(document.getElementById("age").value);
+            Number(
+                document.getElementById("age").value
+            );
 
 
         const error =
@@ -56,6 +64,15 @@ document.getElementById("bookingForm")
 
             error.textContent =
                 "Please select a ticket type.";
+
+            return;
+        }
+
+
+        if (!selectedDate) {
+
+            error.textContent =
+                "Please select a festival date.";
 
             return;
         }
@@ -77,11 +94,19 @@ document.getElementById("bookingForm")
 
             event: selectedEvent,
 
+            eventDate:
+                selectedDate.value,
+
             ticketType:
                 selectedTicket.value,
 
+            ticketTypeId:
+                selectedTicket.dataset.ticketTypeId,
+
             price:
-                Number(selectedTicket.dataset.price),
+                Number(
+                    selectedTicket.dataset.price
+                ),
 
             attendee: {
 

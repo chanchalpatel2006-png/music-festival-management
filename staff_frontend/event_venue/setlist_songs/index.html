@@ -90,10 +90,10 @@
             <h2>Add Setlist Song</h2>
 
             <form id="setlistSongForm">
-
                 <label>Setlist ID</label>
-
-                <input type="text" id="setlistId" maxlength="6" placeholder="e.g. SL0001" required>
+                <select id="setlistId" required>
+                    <option value="">Select Setlist</option>
+                </select>
 
 
                 <label>Song</label>
@@ -121,7 +121,7 @@
 
     </div>
 
-
+    <script src="../../../idGenerator.js"></script>
     <script src="script.js"></script>
 
 </body>

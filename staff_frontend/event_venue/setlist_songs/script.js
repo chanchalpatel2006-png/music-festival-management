@@ -1,5 +1,6 @@
 const API_URL = "http://localhost:3000/api/setlist-song";
 const SONG_API_URL = "http://localhost:3000/api/song";
+const SETLIST_API_URL = "http://localhost:3000/api/setlist";
 
 const addSetlistSongBtn =
     document.getElementById("addSetlistSongBtn");
@@ -22,11 +23,58 @@ const formError =
 const songSelect =
     document.getElementById("songId");
 
+const setlistSelect =
+    document.getElementById("setlistId");
+
 
 let editingRow = null;
 let songsList = [];
 
+// ------------------------------------
+// LOAD SETLISTS INTO DROPDOWN
+// ------------------------------------
 
+async function loadSetlists() {
+
+    try {
+
+        const response =
+            await fetch(SETLIST_API_URL);
+
+        if (!response.ok) {
+            throw new Error("Failed to load setlists");
+        }
+
+        const setlists =
+            await response.json();
+
+        setlistSelect.innerHTML =
+            `<option value="">Select Setlist</option>`;
+
+        setlists.forEach(setlist => {
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                setlist.setlist_id;
+
+            option.textContent =
+                setlist.setlist_id;
+
+            setlistSelect.appendChild(option);
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Could not load setlists from database.");
+
+    }
+
+}
 // ------------------------------------
 // LOAD SONGS INTO DROPDOWN
 // ------------------------------------
@@ -96,7 +144,7 @@ function getSongName(songId) {
 async function loadSetlistSongs() {
 
     try {
-
+        await loadSetlists();
         await loadSongs();
 
         const response =
@@ -180,7 +228,7 @@ addSetlistSongBtn.addEventListener(
         setlistSongForm.reset();
 
         formError.textContent = "";
-
+        await loadSetlists();
         await loadSongs();
 
         document.querySelector(
@@ -514,7 +562,7 @@ setlistSongTableBody.addEventListener(
 
             editingRow = row;
 
-
+            await loadSetlists();
             await loadSongs();
 
 

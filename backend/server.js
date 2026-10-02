@@ -276,6 +276,89 @@ const tables = {
    GET /api/events
    GET /api/tickets
 ========================================================= */
+/* ---------- MANAGER ROUTES ---------- */
+
+// GET all managers (this was missing)
+app.get("/api/manager", async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT manager_id, manager_name, phone, email
+            FROM manager
+            ORDER BY manager_id
+        `);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to fetch managers" });
+    }
+});
+
+// UPDATE manager (uses old_manager_id so the ID can be changed)
+app.put("/api/manager", async (req, res) => {
+    try {
+        const { old_manager_id, manager_id, manager_name, phone, email } = req.body;
+
+        const result = await pool.query(`
+            UPDATE manager
+            SET manager_id = $1, manager_name = $2, phone = $3, email = $4
+            WHERE manager_id = $5
+            RETURNING manager_id, manager_name, phone, email
+        `, [manager_id, manager_name, phone, email || null, old_manager_id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Manager not found" });
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// DELETE manager by URL id
+app.delete("/api/manager/:id", async (req, res) => {
+    try {
+        const result = await pool.query(
+            `DELETE FROM manager WHERE manager_id = $1 RETURNING manager_id`,
+            [req.params.id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Manager not found" });
+        }
+        res.json({ message: "Manager deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        if (error.code === "23503") {
+            return res.status(400).json({
+                error: "Cannot delete this manager because artists are assigned to them."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// DELETE artist by URL id
+app.delete("/api/artists/:id", async (req, res) => {
+    try {
+        const result = await pool.query(
+            `DELETE FROM artists WHERE artist_id = $1 RETURNING artist_id`,
+            [req.params.id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Artist not found" });
+        }
+        res.json({ message: "Artist deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        if (error.code === "23503") {
+            return res.status(400).json({
+                error: "Cannot delete this artist because it is used by another record."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 app.get("/api/artists", async (req, res) => {
     try {
@@ -3022,22 +3105,1678 @@ app.delete("/api/ticket/:id", async (req, res) => {
 
 });
 
-app.get("/api/:table", async (req, res) => {
+/* =========================================================
+   VENDOR ROUTES
+========================================================= */
 
-    const tableName = req.params.table;
-    const config = tables[tableName];
 
-    if (!config) {
-        return res.status(404).json({
-            error: "Table not supported"
-        });
-    }
+/* -----------------------------------------
+   GET ALL VENDORS
+----------------------------------------- */
+
+app.get("/api/vendor", async (req, res) => {
 
     try {
 
-        const result = await pool.query(
-            `SELECT * FROM "${tableName}" ORDER BY 1`
+        const result = await pool.query(`
+            SELECT
+                vendor_id,
+                vendor_name,
+                phone,
+                email,
+                vendor_type
+            FROM vendor
+            ORDER BY vendor_id
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Failed to fetch vendors"
+        });
+
+    }
+
+});
+
+
+/* -----------------------------------------
+   ADD VENDOR
+----------------------------------------- */
+
+app.post("/api/vendor", async (req, res) => {
+
+    try {
+
+        const {
+            vendor_id,
+            vendor_name,
+            phone,
+            email,
+            vendor_type
+        } = req.body;
+
+
+        const result = await pool.query(`
+            INSERT INTO vendor
+            (
+                vendor_id,
+                vendor_name,
+                phone,
+                email,
+                vendor_type
+            )
+            VALUES
+            ($1, $2, $3, $4, $5)
+            RETURNING
+                vendor_id,
+                vendor_name,
+                phone,
+                email,
+                vendor_type
+        `, [
+            vendor_id,
+            vendor_name,
+            phone,
+            email,
+            vendor_type
+        ]);
+
+
+        res.status(201).json(
+            result.rows[0]
         );
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        if (error.code === "23505") {
+
+            return res.status(400).json({
+                error: "Vendor ID already exists."
+            });
+
+        }
+
+
+        if (error.code === "23522") {
+
+            return res.status(400).json({
+                error: "Invalid vendor data."
+            });
+
+        }
+
+
+        res.status(500).json({
+            error: error.message
+        });
+
+    }
+
+});
+
+
+/* -----------------------------------------
+   UPDATE VENDOR
+----------------------------------------- */
+
+app.put("/api/vendor", async (req, res) => {
+
+    try {
+
+        const {
+            old_vendor_id,
+            vendor_id,
+            vendor_name,
+            phone,
+            email,
+            vendor_type
+        } = req.body;
+
+
+        const result = await pool.query(`
+            UPDATE vendor
+            SET
+                vendor_id = $1,
+                vendor_name = $2,
+                phone = $3,
+                email = $4,
+                vendor_type = $5
+            WHERE vendor_id = $6
+            RETURNING
+                vendor_id,
+                vendor_name,
+                phone,
+                email,
+                vendor_type
+        `, [
+            vendor_id,
+            vendor_name,
+            phone,
+            email,
+            vendor_type,
+            old_vendor_id
+        ]);
+
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                error: "Vendor not found"
+            });
+
+        }
+
+
+        res.json(
+            result.rows[0]
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        if (error.code === "23505") {
+
+            return res.status(400).json({
+                error: "Vendor ID already exists."
+            });
+
+        }
+
+
+        res.status(500).json({
+            error: error.message
+        });
+
+    }
+
+});
+
+
+/* -----------------------------------------
+   DELETE VENDOR
+----------------------------------------- */
+
+app.delete("/api/vendor/:id", async (req, res) => {
+
+    try {
+
+        const vendorId =
+            req.params.id;
+
+
+        const result = await pool.query(`
+            DELETE FROM vendor
+            WHERE vendor_id = $1
+            RETURNING vendor_id
+        `, [vendorId]);
+
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                error: "Vendor not found"
+            });
+
+        }
+
+
+        res.json({
+            message:
+                "Vendor deleted successfully",
+            vendor_id:
+                vendorId
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        /*
+           A vendor cannot be deleted if a stall
+           is still using that vendor.
+        */
+
+        if (error.code === "23503") {
+
+            return res.status(400).json({
+                error:
+                    "Cannot delete this vendor because a stall is assigned to it."
+            });
+
+        }
+
+
+        res.status(500).json({
+            error: error.message
+        });
+
+    }
+
+});
+
+// ==================== STALL ROUTES ====================
+
+// GET - Fetch all stalls
+app.get("/api/stall", async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT stall_id, vendor_id, stall_name, stall_type
+            FROM stall
+            ORDER BY stall_id
+        `);
+
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+// POST - Add a new stall
+app.post("/api/stall", async (req, res) => {
+    const { stall_id, vendor_id, stall_name, stall_type } = req.body;
+
+    try {
+        const result = await pool.query(`
+            INSERT INTO stall
+            (stall_id, vendor_id, stall_name, stall_type)
+            VALUES ($1, $2, $3, $4)
+            RETURNING stall_id, vendor_id, stall_name, stall_type
+        `, [stall_id, vendor_id, stall_name, stall_type]);
+
+        res.status(201).json(result.rows[0]);
+
+    } catch (err) {
+        console.error(err);
+
+        if (err.code === "23505") {
+            return res.status(400).json({
+                error: "Stall ID already exists."
+            });
+        }
+
+        if (err.code === "23503") {
+            return res.status(400).json({
+                error: "Vendor ID does not exist."
+            });
+        }
+
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+// PUT - Update a stall
+app.put("/api/stall", async (req, res) => {
+    const {
+        old_stall_id,
+        stall_id,
+        vendor_id,
+        stall_name,
+        stall_type
+    } = req.body;
+
+    try {
+        const result = await pool.query(`
+            UPDATE stall
+            SET stall_id = $1,
+                vendor_id = $2,
+                stall_name = $3,
+                stall_type = $4
+            WHERE stall_id = $5
+            RETURNING stall_id, vendor_id, stall_name, stall_type
+        `, [
+            stall_id,
+            vendor_id,
+            stall_name,
+            stall_type,
+            old_stall_id
+        ]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                error: "Stall not found."
+            });
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (err) {
+        console.error(err);
+
+        if (err.code === "23505") {
+            return res.status(400).json({
+                error: "Stall ID already exists."
+            });
+        }
+
+        if (err.code === "23503") {
+            return res.status(400).json({
+                error: "Vendor ID does not exist."
+            });
+        }
+
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+// DELETE - Delete a stall
+app.delete("/api/stall/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const result = await pool.query(`
+            DELETE FROM stall
+            WHERE stall_id = $1
+            RETURNING stall_id
+        `, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                error: "Stall not found."
+            });
+        }
+
+        res.json({
+            message: "Stall deleted successfully."
+        });
+
+    } catch (err) {
+        console.error(err);
+
+        if (err.code === "23503") {
+            return res.status(400).json({
+                error: "Cannot delete this stall because it is being used by another record."
+            });
+        }
+
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ==================== STALL SETUP ROUTES ====================
+
+// GET - Fetch all stall setups
+app.get("/api/stall-setup", async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT
+                setup_id,
+                stall_id,
+                venue_id,
+                stall_rent,
+                stall_date::text AS stall_date
+            FROM stall_setup
+            ORDER BY setup_id
+        `);
+
+        res.json(result.rows);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+
+// POST - Add a stall setup
+app.post("/api/stall-setup", async (req, res) => {
+
+    const {
+        setup_id,
+        stall_id,
+        venue_id,
+        stall_rent,
+        stall_date
+    } = req.body;
+
+    try {
+
+        const result = await pool.query(`
+            INSERT INTO stall_setup
+            (
+                setup_id,
+                stall_id,
+                venue_id,
+                stall_rent,
+                stall_date
+            )
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING
+                setup_id,
+                stall_id,
+                venue_id,
+                stall_rent,
+                stall_date::text AS stall_date
+        `, [
+            setup_id,
+            stall_id,
+            venue_id,
+            stall_rent,
+            stall_date
+        ]);
+
+        res.status(201).json(result.rows[0]);
+
+    } catch (err) {
+
+        console.error(err);
+
+        // Duplicate primary key
+        if (err.code === "23505") {
+            return res.status(400).json({
+                error: "Setup ID already exists."
+            });
+        }
+
+        // Foreign key violation
+        if (err.code === "23503") {
+            return res.status(400).json({
+                error: "Invalid Stall ID or Venue ID."
+            });
+        }
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+
+// PUT - Update a stall setup
+app.put("/api/stall-setup", async (req, res) => {
+
+    const {
+        old_setup_id,
+        setup_id,
+        stall_id,
+        venue_id,
+        stall_rent,
+        stall_date
+    } = req.body;
+
+    try {
+
+        const result = await pool.query(`
+            UPDATE stall_setup
+            SET
+                setup_id = $1,
+                stall_id = $2,
+                venue_id = $3,
+                stall_rent = $4,
+                stall_date = $5
+            WHERE setup_id = $6
+            RETURNING
+                setup_id,
+                stall_id,
+                venue_id,
+                stall_rent,
+                stall_date::text AS stall_date
+        `, [
+            setup_id,
+            stall_id,
+            venue_id,
+            stall_rent,
+            stall_date,
+            old_setup_id
+        ]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                error: "Stall setup not found."
+            });
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (err) {
+
+        console.error(err);
+
+        if (err.code === "23505") {
+            return res.status(400).json({
+                error: "Setup ID already exists."
+            });
+        }
+
+        if (err.code === "23503") {
+            return res.status(400).json({
+                error: "Invalid Stall ID or Venue ID."
+            });
+        }
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+
+// DELETE - Delete a stall setup
+app.delete("/api/stall-setup/:id", async (req, res) => {
+
+    const { id } = req.params;
+
+    try {
+
+        const result = await pool.query(`
+            DELETE FROM stall_setup
+            WHERE setup_id = $1
+            RETURNING setup_id
+        `, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                error: "Stall setup not found."
+            });
+        }
+
+        res.json({
+            message: "Stall setup deleted successfully."
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        if (err.code === "23503") {
+            return res.status(400).json({
+                error: "Cannot delete this stall setup because it is referenced by another record."
+            });
+        }
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+// ==================== STAFF ROUTES ====================
+
+// GET - Fetch all staff
+app.get("/api/staff", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT
+                staff_id,
+                staff_name,
+                role,
+                phone,
+                email
+            FROM staff
+            ORDER BY staff_id
+        `);
+
+        res.json(result.rows);
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+
+// POST - Add staff
+app.post("/api/staff", async (req, res) => {
+
+    const {
+        staff_id,
+        staff_name,
+        role,
+        phone,
+        email
+    } = req.body;
+
+    try {
+
+        const result = await pool.query(`
+            INSERT INTO staff
+            (
+                staff_id,
+                staff_name,
+                role,
+                phone,
+                email
+            )
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING
+                staff_id,
+                staff_name,
+                role,
+                phone,
+                email
+        `, [
+            staff_id,
+            staff_name,
+            role,
+            phone,
+            email
+        ]);
+
+        res.status(201).json(result.rows[0]);
+
+    } catch (err) {
+
+        console.error(err);
+
+        if (err.code === "23505") {
+            return res.status(400).json({
+                error: "Staff ID already exists."
+            });
+        }
+
+        if (err.code === "23514") {
+            return res.status(400).json({
+                error: "Invalid staff role."
+            });
+        }
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+
+// PUT - Update staff
+app.put("/api/staff", async (req, res) => {
+
+    const {
+        old_staff_id,
+        staff_id,
+        staff_name,
+        role,
+        phone,
+        email
+    } = req.body;
+
+    try {
+
+        const result = await pool.query(`
+            UPDATE staff
+            SET
+                staff_id = $1,
+                staff_name = $2,
+                role = $3,
+                phone = $4,
+                email = $5
+            WHERE staff_id = $6
+            RETURNING
+                staff_id,
+                staff_name,
+                role,
+                phone,
+                email
+        `, [
+            staff_id,
+            staff_name,
+            role,
+            phone,
+            email,
+            old_staff_id
+        ]);
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                error: "Staff member not found."
+            });
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (err) {
+
+        console.error(err);
+
+        if (err.code === "23505") {
+            return res.status(400).json({
+                error: "Staff ID already exists."
+            });
+        }
+
+        if (err.code === "23514") {
+            return res.status(400).json({
+                error: "Invalid staff role."
+            });
+        }
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+
+// DELETE - Delete staff
+app.delete("/api/staff/:id", async (req, res) => {
+
+    const { id } = req.params;
+
+    try {
+
+        const result = await pool.query(`
+            DELETE FROM staff
+            WHERE staff_id = $1
+            RETURNING staff_id
+        `, [id]);
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                error: "Staff member not found."
+            });
+        }
+
+        res.json({
+            message: "Staff deleted successfully."
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        if (err.code === "23503") {
+            return res.status(400).json({
+                error: "Cannot delete this staff member because it is referenced by another record."
+            });
+        }
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+// ===============================
+// STAFF ASSIGNMENT
+// ===============================
+
+app.get("/api/staff-assignment", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT
+                assignment_id,
+                staff_id,
+                stage_id,
+                event_id,
+                shift_start::text AS shift_start,
+                shift_end::text AS shift_end
+            FROM staff_assignment
+            ORDER BY assignment_id
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Unable to load staff assignments."
+        });
+    }
+});
+
+
+app.post("/api/staff-assignment", async (req, res) => {
+
+    const {
+        assignment_id,
+        staff_id,
+        stage_id,
+        event_id,
+        shift_start,
+        shift_end
+    } = req.body;
+
+    try {
+
+        const result = await pool.query(`
+            INSERT INTO staff_assignment
+            (
+                assignment_id,
+                staff_id,
+                stage_id,
+                event_id,
+                shift_start,
+                shift_end
+            )
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING
+                assignment_id,
+                staff_id,
+                stage_id,
+                event_id,
+                shift_start::text AS shift_start,
+                shift_end::text AS shift_end
+        `, [
+            assignment_id,
+            staff_id,
+            stage_id || null,
+            event_id,
+            shift_start,
+            shift_end
+        ]);
+
+        res.status(201).json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.code === "23505") {
+
+            return res.status(400).json({
+                error: "Assignment ID already exists."
+            });
+        }
+
+        if (error.code === "23503") {
+
+            return res.status(400).json({
+                error: "Invalid Staff, Stage, or Event selected."
+            });
+        }
+
+        if (error.code === "23514") {
+
+            return res.status(400).json({
+                error: "Shift End must be after Shift Start."
+            });
+        }
+
+        res.status(500).json({
+            error: "Unable to create staff assignment."
+        });
+    }
+});
+
+
+app.put("/api/staff-assignment", async (req, res) => {
+
+    const {
+        old_assignment_id,
+        assignment_id,
+        staff_id,
+        stage_id,
+        event_id,
+        shift_start,
+        shift_end
+    } = req.body;
+
+    try {
+
+        const result = await pool.query(`
+            UPDATE staff_assignment
+            SET
+                assignment_id = $1,
+                staff_id = $2,
+                stage_id = $3,
+                event_id = $4,
+                shift_start = $5,
+                shift_end = $6
+            WHERE assignment_id = $7
+            RETURNING
+                assignment_id,
+                staff_id,
+                stage_id,
+                event_id,
+                shift_start::text AS shift_start,
+                shift_end::text AS shift_end
+        `, [
+            assignment_id,
+            staff_id,
+            stage_id || null,
+            event_id,
+            shift_start,
+            shift_end,
+            old_assignment_id
+        ]);
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                error: "Staff assignment not found."
+            });
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.code === "23505") {
+
+            return res.status(400).json({
+                error: "Assignment ID already exists."
+            });
+        }
+
+        if (error.code === "23503") {
+
+            return res.status(400).json({
+                error: "Invalid Staff, Stage, or Event selected."
+            });
+        }
+
+        if (error.code === "23514") {
+
+            return res.status(400).json({
+                error: "Shift End must be after Shift Start."
+            });
+        }
+
+        res.status(500).json({
+            error: "Unable to update staff assignment."
+        });
+    }
+});
+
+
+app.delete("/api/staff-assignment/:id", async (req, res) => {
+
+    const { id } = req.params;
+
+    try {
+
+        const result = await pool.query(`
+            DELETE FROM staff_assignment
+            WHERE assignment_id = $1
+            RETURNING assignment_id
+        `, [id]);
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                error: "Staff assignment not found."
+            });
+        }
+
+        res.json({
+            message: "Staff assignment deleted successfully."
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.code === "23503") {
+
+            return res.status(400).json({
+                error: "Unable to delete this assignment."
+            });
+        }
+
+        res.status(500).json({
+            error: "Unable to delete staff assignment."
+        });
+    }
+});
+
+app.get("/api/event/:event_id/stages", async (req, res) => {
+
+    const { event_id } = req.params;
+
+    try {
+
+        const result = await pool.query(`
+            SELECT DISTINCT
+                s.stage_id,
+                s.stage_name
+            FROM performance p
+            JOIN stage s
+                ON p.stage_id = s.stage_id
+            WHERE p.event_id = $1
+            ORDER BY s.stage_id
+        `, [event_id]);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Unable to load stages for this event."
+        });
+    }
+});
+app.get("/api/stage/:stage_id/events", async (req, res) => {
+
+    const { stage_id } = req.params;
+
+    try {
+
+        const result = await pool.query(`
+            SELECT DISTINCT
+                e.event_id,
+                e.event_name
+            FROM performance p
+            JOIN event e
+                ON p.event_id = e.event_id
+            WHERE p.stage_id = $1
+            ORDER BY e.event_id
+        `, [stage_id]);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Unable to load events for this stage."
+        });
+    }
+});
+
+
+// ===============================
+// SPONSOR
+// ===============================
+
+app.get("/api/sponsor", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT
+                sponsor_id,
+                sponsor_name,
+                phone,
+                email,
+                sponsorship_type,
+                sponsorship_tier,
+                sponsorship_amount
+            FROM sponsor
+            ORDER BY sponsor_id
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Unable to load sponsors."
+        });
+    }
+});
+
+
+app.post("/api/sponsor", async (req, res) => {
+
+    const {
+        sponsor_id,
+        sponsor_name,
+        phone,
+        email,
+        sponsorship_type,
+        sponsorship_tier,
+        sponsorship_amount
+    } = req.body;
+
+    try {
+
+        const result = await pool.query(`
+            INSERT INTO sponsor
+            (
+                sponsor_id,
+                sponsor_name,
+                phone,
+                email,
+                sponsorship_type,
+                sponsorship_tier,
+                sponsorship_amount
+            )
+            VALUES
+            ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING *
+        `, [
+            sponsor_id,
+            sponsor_name,
+            phone,
+            email,
+            sponsorship_type,
+            sponsorship_tier,
+            sponsorship_amount === "" ||
+                sponsorship_amount === undefined
+                ? null
+                : sponsorship_amount
+        ]);
+
+        res.status(201).json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        // Duplicate sponsor ID
+
+        if (error.code === "23505") {
+
+            return res.status(400).json({
+                error: "Sponsor ID already exists."
+            });
+        }
+
+
+        // CHECK constraint violation
+
+        if (error.code === "23514") {
+
+            return res.status(400).json({
+                error:
+                    "Invalid sponsorship type, tier, email, or amount."
+            });
+        }
+
+
+        res.status(500).json({
+            error: "Unable to create sponsor."
+        });
+    }
+});
+
+
+app.put("/api/sponsor", async (req, res) => {
+
+    const {
+        old_sponsor_id,
+        sponsor_id,
+        sponsor_name,
+        phone,
+        email,
+        sponsorship_type,
+        sponsorship_tier,
+        sponsorship_amount
+    } = req.body;
+
+    try {
+
+        const result = await pool.query(`
+            UPDATE sponsor
+            SET
+                sponsor_id = $1,
+                sponsor_name = $2,
+                phone = $3,
+                email = $4,
+                sponsorship_type = $5,
+                sponsorship_tier = $6,
+                sponsorship_amount = $7
+            WHERE sponsor_id = $8
+            RETURNING *
+        `, [
+            sponsor_id,
+            sponsor_name,
+            phone,
+            email,
+            sponsorship_type,
+            sponsorship_tier,
+            sponsorship_amount === "" ||
+                sponsorship_amount === undefined
+                ? null
+                : sponsorship_amount,
+            old_sponsor_id
+        ]);
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                error: "Sponsor not found."
+            });
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        if (error.code === "23505") {
+
+            return res.status(400).json({
+                error: "Sponsor ID already exists."
+            });
+        }
+
+
+        if (error.code === "23514") {
+
+            return res.status(400).json({
+                error:
+                    "Invalid sponsorship type, tier, email, or amount."
+            });
+        }
+
+
+        res.status(500).json({
+            error: "Unable to update sponsor."
+        });
+    }
+});
+
+
+app.delete("/api/sponsor/:id", async (req, res) => {
+
+    const { id } = req.params;
+
+    try {
+
+        const result = await pool.query(`
+            DELETE FROM sponsor
+            WHERE sponsor_id = $1
+            RETURNING sponsor_id
+        `, [id]);
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                error: "Sponsor not found."
+            });
+        }
+
+        res.json({
+            message: "Sponsor deleted successfully."
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        // In case another table later references Sponsor
+
+        if (error.code === "23503") {
+
+            return res.status(400).json({
+                error:
+                    "Cannot delete this sponsor because it is being used by another record."
+            });
+        }
+
+
+        res.status(500).json({
+            error: "Unable to delete sponsor."
+        });
+    }
+});
+
+// ===============================
+// SPONSOR DEMAND
+// ===============================
+
+app.get("/api/sponsor-demand", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT
+                sponsor_id,
+                demand_type
+            FROM sponsor_demand
+            ORDER BY sponsor_id, demand_type
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Unable to load sponsor demands."
+        });
+    }
+});
+
+
+app.post("/api/sponsor-demand", async (req, res) => {
+
+    const {
+        sponsor_id,
+        demand_type
+    } = req.body;
+
+    try {
+
+        const result = await pool.query(`
+            INSERT INTO sponsor_demand
+            (
+                sponsor_id,
+                demand_type
+            )
+            VALUES ($1, $2)
+            RETURNING
+                sponsor_id,
+                demand_type
+        `, [
+            sponsor_id,
+            demand_type
+        ]);
+
+        res.status(201).json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        // Duplicate composite primary key
+
+        if (error.code === "23505") {
+
+            return res.status(400).json({
+                error:
+                    "This sponsor already has this demand type."
+            });
+        }
+
+
+        // Foreign key violation, if your database
+        // later adds FK sponsor_id → sponsor
+
+        if (error.code === "23503") {
+
+            return res.status(400).json({
+                error:
+                    "Selected sponsor does not exist."
+            });
+        }
+
+
+        // CHECK constraint
+
+        if (error.code === "23514") {
+
+            return res.status(400).json({
+                error:
+                    "Invalid demand type."
+            });
+        }
+
+
+        res.status(500).json({
+            error: "Unable to create sponsor demand."
+        });
+    }
+});
+
+
+app.put("/api/sponsor-demand", async (req, res) => {
+
+    const {
+        old_sponsor_id,
+        old_demand_type,
+        sponsor_id,
+        demand_type
+    } = req.body;
+
+    try {
+
+        const result = await pool.query(`
+            UPDATE sponsor_demand
+            SET
+                sponsor_id = $1,
+                demand_type = $2
+            WHERE
+                sponsor_id = $3
+                AND demand_type = $4
+            RETURNING
+                sponsor_id,
+                demand_type
+        `, [
+            sponsor_id,
+            demand_type,
+            old_sponsor_id,
+            old_demand_type
+        ]);
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                error: "Sponsor demand not found."
+            });
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        if (error.code === "23505") {
+
+            return res.status(400).json({
+                error:
+                    "This sponsor already has this demand type."
+            });
+        }
+
+
+        if (error.code === "23503") {
+
+            return res.status(400).json({
+                error:
+                    "Selected sponsor does not exist."
+            });
+        }
+
+
+        if (error.code === "23514") {
+
+            return res.status(400).json({
+                error:
+                    "Invalid demand type."
+            });
+        }
+
+
+        res.status(500).json({
+            error: "Unable to update sponsor demand."
+        });
+    }
+});
+
+
+app.delete(
+    "/api/sponsor-demand/:sponsor_id/:demand_type",
+    async (req, res) => {
+
+        const {
+            sponsor_id,
+            demand_type
+        } = req.params;
+
+        try {
+
+            const result = await pool.query(`
+                DELETE FROM sponsor_demand
+                WHERE
+                    sponsor_id = $1
+                    AND demand_type = $2
+                RETURNING
+                    sponsor_id,
+                    demand_type
+            `, [
+                sponsor_id,
+                demand_type
+            ]);
+
+            if (result.rows.length === 0) {
+
+                return res.status(404).json({
+                    error:
+                        "Sponsor demand not found."
+                });
+            }
+
+            res.json({
+                message:
+                    "Sponsor demand deleted successfully."
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+            res.status(500).json({
+                error:
+                    "Unable to delete sponsor demand."
+            });
+        }
+    }
+);
+
+app.get("/api/user/events", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT
+                e.event_id,
+                e.event_name,
+                e.event_date,
+                e.start_time,
+                e.end_time,
+                v.venue_name,
+                STRING_AGG(
+                    DISTINCT a.artist_name,
+                    ', '
+                ) AS artists
+            FROM event e
+
+            JOIN venue v
+                ON e.venue_id = v.venue_id
+
+            LEFT JOIN performance p
+                ON e.event_id = p.event_id
+
+            LEFT JOIN artists a
+                ON p.artist_id = a.artist_id
+
+            GROUP BY
+                e.event_id,
+                e.event_name,
+                e.event_date,
+                e.start_time,
+                e.end_time,
+                v.venue_name
+
+            ORDER BY e.event_date, e.start_time
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: error.message
+        });
+    }
+});
+
+
+/*
+   USER ARTISTS
+*/
+
+app.get("/api/user/artists", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT
+                a.artist_id,
+                a.artist_name,
+                a.artist_type,
+                a.country,
+                STRING_AGG(
+                    DISTINCT g.genre_name,
+                    ', '
+                ) AS genres
+            FROM artists a
+
+            LEFT JOIN artist_genre ag
+                ON a.artist_id = ag.artist_id
+
+            LEFT JOIN genre g
+                ON ag.genre_id = g.genre_id
+
+            GROUP BY
+                a.artist_id,
+                a.artist_name,
+                a.artist_type,
+                a.country
+
+            ORDER BY a.artist_name
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: error.message
+        });
+    }
+});
+
+
+/*
+   AVAILABLE TICKET TYPES
+
+   Used by booking page.
+*/
+
+app.get("/api/user/ticket-types", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT
+                ticket_type_id,
+                type_name,
+                total_quantity,
+                available,
+                price
+            FROM ticket_type
+            WHERE available > 0
+            ORDER BY price
+        `);
 
         res.json(result.rows);
 
@@ -3053,14 +4792,916 @@ app.get("/api/:table", async (req, res) => {
 
 
 /* =========================================================
-   GET ONE RECORD
+   COMPLETE BOOKING + PAYMENT
 
-   Works for tables having ONE primary key.
+   This is the important route for:
 
-   Example:
-   GET /api/artists/AR001
-   GET /api/events/EV0001
+   booking page
+        ↓
+   payment page
+        ↓
+   PostgreSQL
+
+   It creates:
+
+   1. attendee
+   2. ticket
+   3. payment
+
+   and decreases ticket_type.available.
+
+   All three happen inside ONE transaction.
 ========================================================= */
+
+app.post("/api/bookings", async (req, res) => {
+
+    const client = await pool.connect();
+
+    try {
+
+        const {
+            event_date,
+            ticket_type_id,
+            attendee,
+            payment_method
+        } = req.body;
+
+
+        // Basic validation
+
+        if (
+            !event_date ||
+            !ticket_type_id ||
+            !attendee ||
+            !payment_method
+        ) {
+
+            return res.status(400).json({
+                error: "Incomplete booking information"
+            });
+
+        }
+
+
+        if (
+            !attendee.name ||
+            !attendee.email ||
+            !attendee.phone ||
+            attendee.age === undefined
+        ) {
+
+            return res.status(400).json({
+                error: "Incomplete attendee information"
+            });
+
+        }
+
+
+        // Allowed festival dates
+
+        const allowedDates = [
+            "2026-12-20",
+            "2026-12-21",
+            "2026-12-22"
+        ];
+
+
+        if (!allowedDates.includes(event_date)) {
+
+            return res.status(400).json({
+                error: "Invalid festival date."
+            });
+
+        }
+
+
+        await client.query("BEGIN");
+
+
+        // Get ticket type and lock the row
+
+        const ticketResult = await client.query(
+            `
+            SELECT
+                ticket_type_id,
+                type_name,
+                total_quantity,
+                available,
+                price
+            FROM ticket_type
+            WHERE ticket_type_id = $1
+            FOR UPDATE
+            `,
+            [ticket_type_id]
+        );
+
+
+        if (ticketResult.rows.length === 0) {
+
+            throw new Error("Ticket type not found.");
+
+        }
+
+
+        const ticketType = ticketResult.rows[0];
+
+
+        if (ticketType.available <= 0) {
+
+            throw new Error(
+                "No tickets available for this ticket type."
+            );
+
+        }
+
+
+        // Reduce available tickets
+
+        await client.query(
+            `
+            UPDATE ticket_type
+            SET available = available - 1
+            WHERE ticket_type_id = $1
+            `,
+            [ticket_type_id]
+        );
+
+
+        // --------------------------------
+        // Find existing attendee
+        // --------------------------------
+
+        const existingAttendee = await client.query(
+            `
+    SELECT attendee_id
+    FROM attendee
+    WHERE email = $1
+      AND phone = $2
+    LIMIT 1
+    `,
+            [
+                attendee.email,
+                attendee.phone
+            ]
+        );
+
+
+        let attendeeId;
+
+
+        // Existing attendee found
+
+        if (existingAttendee.rows.length > 0) {
+
+            attendeeId =
+                existingAttendee.rows[0].attendee_id;
+
+        }
+
+
+        // New attendee
+
+        else {
+
+            const attendeeResult = await client.query(
+                `
+        SELECT attendee_id
+        FROM attendee
+        WHERE attendee_id LIKE 'AT%'
+        ORDER BY attendee_id DESC
+        LIMIT 1
+        `
+            );
+
+
+            let attendeeNumber = 1;
+
+
+            if (attendeeResult.rows.length > 0) {
+
+                const lastId =
+                    attendeeResult.rows[0].attendee_id;
+
+                attendeeNumber =
+                    parseInt(lastId.substring(2), 10) + 1;
+
+            }
+
+
+            attendeeId =
+                "AT" +
+                String(attendeeNumber).padStart(6, "0");
+
+
+            await client.query(
+                `
+        INSERT INTO attendee
+        (
+            attendee_id,
+            attendee_name,
+            age,
+            email,
+            phone
+        )
+        VALUES ($1, $2, $3, $4, $5)
+        `,
+                [
+                    attendeeId,
+                    attendee.name,
+                    attendee.age,
+                    attendee.email,
+                    attendee.phone
+                ]
+            );
+
+        }
+
+        // --------------------------------
+        // Generate Ticket ID
+        // --------------------------------
+
+        const ticketResultId = await client.query(
+            `
+            SELECT ticket_id
+            FROM ticket
+            WHERE ticket_id LIKE 'TK%'
+            ORDER BY ticket_id DESC
+            LIMIT 1
+            `
+        );
+
+
+        let ticketNumber = 1;
+
+
+        if (ticketResultId.rows.length > 0) {
+
+            const lastId =
+                ticketResultId.rows[0].ticket_id;
+
+            ticketNumber =
+                parseInt(lastId.substring(2), 10) + 1;
+
+        }
+
+
+        const ticketId =
+            "TK" +
+            String(ticketNumber).padStart(6, "0");
+
+
+        // Insert ticket
+
+        await client.query(
+            `
+            INSERT INTO ticket
+            (
+                ticket_id,
+                attendee_id,
+                ticket_type_id,
+                purchase_date,
+                entry_date,
+                ticket_status
+            )
+            VALUES
+            (
+                $1,
+                $2,
+                $3,
+                CURRENT_DATE,
+                $4,
+                'Active'
+            )
+            `,
+            [
+                ticketId,
+                attendeeId,
+                ticket_type_id,
+                event_date
+            ]
+        );
+
+
+        // --------------------------------
+        // Generate Payment ID
+        // --------------------------------
+
+        const paymentResultId = await client.query(
+            `
+            SELECT payment_id
+            FROM payment
+            WHERE payment_id LIKE 'PM%'
+            ORDER BY payment_id DESC
+            LIMIT 1
+            `
+        );
+
+
+        let paymentNumber = 1;
+
+
+        if (paymentResultId.rows.length > 0) {
+
+            const lastId =
+                paymentResultId.rows[0].payment_id;
+
+            paymentNumber =
+                parseInt(lastId.substring(2), 10) + 1;
+
+        }
+
+
+        const paymentId =
+            "PM" +
+            String(paymentNumber).padStart(6, "0");
+
+
+        // Insert payment
+
+        await client.query(
+            `
+            INSERT INTO payment
+            (
+                payment_id,
+                ticket_id,
+                amount,
+                payment_date,
+                payment_method,
+                payment_status
+            )
+            VALUES
+            (
+                $1,
+                $2,
+                $3,
+                CURRENT_TIMESTAMP,
+                $4,
+                'Success'
+            )
+            `,
+            [
+                paymentId,
+                ticketId,
+                ticketType.price,
+                payment_method
+            ]
+        );
+
+
+        await client.query("COMMIT");
+
+
+        res.status(201).json({
+
+            message: "Booking successful",
+
+            attendee_id: attendeeId,
+
+            ticket_id: ticketId,
+
+            payment_id: paymentId,
+
+            event_date: event_date,
+
+            ticket_type_id: ticket_type_id,
+
+            ticket_type: ticketType.type_name,
+
+            amount: ticketType.price,
+
+            ticket_status: "Active",
+
+            payment_status: "Success"
+
+        });
+
+
+    } catch (error) {
+
+        await client.query("ROLLBACK");
+
+        console.error("BOOKING ERROR:", error);
+
+        res.status(500).json({
+            error: error.message
+        });
+
+    } finally {
+
+        client.release();
+
+    }
+
+});
+
+
+/* =========================================================
+   DASHBOARD / REPORT QUERIES
+   Useful for staff pages and DBMS demonstration.
+========================================================= */
+
+
+/*
+   Ticket + attendee information
+*/
+
+app.get("/api/reports/ticket-attendees", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT
+                t.ticket_id,
+                a.attendee_id,
+                a.attendee_name,
+                a.email,
+                a.phone,
+                a.age,
+                tt.type_name AS ticket_type,
+                tt.price,
+                t.purchase_date,
+                t.entry_date,
+                t.ticket_status
+            FROM ticket t
+
+            INNER JOIN attendee a
+                ON t.attendee_id = a.attendee_id
+
+            INNER JOIN ticket_type tt
+                ON t.ticket_type_id = tt.ticket_type_id
+
+            ORDER BY t.ticket_id
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: error.message
+        });
+    }
+});
+
+
+/*
+   Payment report
+*/
+
+app.get("/api/reports/payments", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT
+                p.payment_id,
+                p.ticket_id,
+                a.attendee_name,
+                p.amount,
+                p.payment_date,
+                p.payment_method,
+                p.payment_status
+            FROM payment p
+
+            INNER JOIN ticket t
+                ON p.ticket_id = t.ticket_id
+
+            INNER JOIN attendee a
+                ON t.attendee_id = a.attendee_id
+
+            ORDER BY p.payment_date DESC
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: error.message
+        });
+    }
+});
+
+
+/*
+   Event + venue + performances
+*/
+
+app.get("/api/reports/events", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT
+                e.event_id,
+                e.event_name,
+                e.event_date,
+                e.start_time,
+                e.end_time,
+                v.venue_name,
+                s.stage_name,
+                a.artist_name,
+                p.performance_type
+            FROM event e
+
+            INNER JOIN venue v
+                ON e.venue_id = v.venue_id
+
+            LEFT JOIN performance p
+                ON e.event_id = p.event_id
+
+            LEFT JOIN artists a
+                ON p.artist_id = a.artist_id
+
+            LEFT JOIN stage s
+                ON p.stage_id = s.stage_id
+
+            ORDER BY e.event_date, e.start_time
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: error.message
+        });
+    }
+});
+
+
+/* =========================================================
+   GENRE ROUTES  (genre_id VARCHAR(4))
+========================================================= */
+
+app.get("/api/genre", async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT genre_id, genre_name
+            FROM genre
+            ORDER BY genre_id
+        `);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to fetch genres" });
+    }
+});
+
+app.post("/api/genre", async (req, res) => {
+    try {
+        const { genre_id, genre_name } = req.body;
+
+        const result = await pool.query(`
+            INSERT INTO genre (genre_id, genre_name)
+            VALUES ($1, $2)
+            RETURNING genre_id, genre_name
+        `, [genre_id, genre_name]);
+
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === "23505") {
+            return res.status(400).json({ error: "Genre ID already exists." });
+        }
+        if (error.code === "22001") {
+            return res.status(400).json({ error: "Genre ID can be at most 4 characters." });
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put("/api/genre", async (req, res) => {
+    try {
+        const { old_genre_id, genre_id, genre_name } = req.body;
+
+        const result = await pool.query(`
+            UPDATE genre
+            SET genre_id = $1, genre_name = $2
+            WHERE genre_id = $3
+            RETURNING genre_id, genre_name
+        `, [genre_id, genre_name, old_genre_id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Genre not found" });
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === "23505") {
+            return res.status(400).json({ error: "Genre ID already exists." });
+        }
+        if (error.code === "23503") {
+            return res.status(400).json({
+                error: "Cannot change this Genre ID because artists are linked to it."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete("/api/genre/:id", async (req, res) => {
+    try {
+        const result = await pool.query(`
+            DELETE FROM genre
+            WHERE genre_id = $1
+            RETURNING genre_id
+        `, [req.params.id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Genre not found" });
+        }
+        res.json({ message: "Genre deleted successfully", genre_id: req.params.id });
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === "23503") {
+            return res.status(400).json({
+                error: "Cannot delete this genre because artists are linked to it."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+/* =========================================================
+   TICKET TYPE ROUTES  (GET already exists above)
+========================================================= */
+
+app.post("/api/ticket-type", async (req, res) => {
+    try {
+        const {
+            ticket_type_id,
+            type_name,
+            total_quantity,
+            available,
+            price
+        } = req.body;
+
+        const result = await pool.query(`
+            INSERT INTO ticket_type
+                (ticket_type_id, type_name, total_quantity, available, price)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING ticket_type_id, type_name, total_quantity, available, price
+        `, [ticket_type_id, type_name, total_quantity, available, price]);
+
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === "23505") {
+            return res.status(400).json({ error: "Ticket Type ID already exists." });
+        }
+        if (error.code === "23514") {
+            return res.status(400).json({
+                error: "Invalid ticket type. Name must be VIP, GENERAL or STUDENT; quantities must be valid and available cannot exceed total."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put("/api/ticket-type", async (req, res) => {
+    try {
+        const {
+            old_ticket_type_id,
+            ticket_type_id,
+            type_name,
+            total_quantity,
+            available,
+            price
+        } = req.body;
+
+        const result = await pool.query(`
+            UPDATE ticket_type
+            SET
+                ticket_type_id = $1,
+                type_name = $2,
+                total_quantity = $3,
+                available = $4,
+                price = $5
+            WHERE ticket_type_id = $6
+            RETURNING ticket_type_id, type_name, total_quantity, available, price
+        `, [
+            ticket_type_id,
+            type_name,
+            total_quantity,
+            available,
+            price,
+            old_ticket_type_id
+        ]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Ticket type not found" });
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === "23505") {
+            return res.status(400).json({ error: "Ticket Type ID already exists." });
+        }
+        if (error.code === "23503") {
+            return res.status(400).json({
+                error: "Cannot change this ID because tickets use this ticket type."
+            });
+        }
+        if (error.code === "23514") {
+            return res.status(400).json({
+                error: "Invalid ticket type. Name must be VIP, GENERAL or STUDENT; quantities must be valid and available cannot exceed total."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete("/api/ticket-type/:id", async (req, res) => {
+    try {
+        const result = await pool.query(`
+            DELETE FROM ticket_type
+            WHERE ticket_type_id = $1
+            RETURNING ticket_type_id
+        `, [req.params.id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Ticket type not found" });
+        }
+        res.json({
+            message: "Ticket type deleted successfully",
+            ticket_type_id: req.params.id
+        });
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === "23503") {
+            return res.status(400).json({
+                error: "Cannot delete this ticket type because tickets have been sold with it."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+/* =========================================================
+   ARTIST GENRE ROUTES  (GET already exists above)
+   The table has no primary key, so duplicates are
+   checked manually.
+========================================================= */
+
+app.post("/api/artist_genre", async (req, res) => {
+    try {
+        const { artist_id, genre_id } = req.body;
+
+        const exists = await pool.query(`
+            SELECT 1 FROM artist_genre
+            WHERE artist_id = $1 AND genre_id = $2
+        `, [artist_id, genre_id]);
+
+        if (exists.rows.length > 0) {
+            return res.status(400).json({
+                error: "This artist already has this genre."
+            });
+        }
+
+        await pool.query(`
+            INSERT INTO artist_genre (artist_id, genre_id)
+            VALUES ($1, $2)
+        `, [artist_id, genre_id]);
+
+        const names = await pool.query(`
+            SELECT
+                ag.artist_id,
+                a.artist_name,
+                ag.genre_id,
+                g.genre_name
+            FROM artist_genre ag
+            LEFT JOIN artists a ON ag.artist_id = a.artist_id
+            LEFT JOIN genre g ON ag.genre_id = g.genre_id
+            WHERE ag.artist_id = $1 AND ag.genre_id = $2
+            LIMIT 1
+        `, [artist_id, genre_id]);
+
+        res.status(201).json(names.rows[0]);
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === "23503") {
+            return res.status(400).json({
+                error: "Selected artist or genre does not exist."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete("/api/artist_genre/:artist_id/:genre_id", async (req, res) => {
+    try {
+        const { artist_id, genre_id } = req.params;
+
+        const result = await pool.query(`
+            DELETE FROM artist_genre
+            WHERE artist_id = $1 AND genre_id = $2
+            RETURNING artist_id, genre_id
+        `, [artist_id, genre_id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Artist genre not found" });
+        }
+        res.json({
+            message: "Artist genre deleted successfully",
+            artist_id,
+            genre_id
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+/* =========================================================
+   ARTIST MEMBER: DELETE  (GET, POST, PUT already exist)
+========================================================= */
+
+app.delete("/api/artist_member/:id", async (req, res) => {
+    try {
+        const result = await pool.query(`
+            DELETE FROM artist_member
+            WHERE member_id = $1
+            RETURNING member_id
+        `, [req.params.id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Artist member not found" });
+        }
+        res.json({
+            message: "Artist member deleted successfully",
+            member_id: req.params.id
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+/* =========================================================
+   SONG: PUT  (GET, POST, DELETE already exist)
+========================================================= */
+
+app.put("/api/song", async (req, res) => {
+    try {
+        const { old_song_id, song_id, song_name, artist_id } = req.body;
+
+        const result = await pool.query(`
+            UPDATE song
+            SET
+                song_id = $1,
+                song_name = $2,
+                artist_id = $3
+            WHERE song_id = $4
+            RETURNING song_id, song_name, artist_id
+        `, [song_id, song_name, artist_id, old_song_id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Song not found" });
+        }
+
+        const song = result.rows[0];
+
+        const artistResult = await pool.query(`
+            SELECT artist_name
+            FROM artists
+            WHERE artist_id = $1
+        `, [song.artist_id]);
+
+        song.artist_name = artistResult.rows[0]?.artist_name || null;
+
+        res.json(song);
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === "23505") {
+            return res.status(400).json({ error: "Song ID already exists." });
+        }
+        if (error.code === "23503") {
+            return res.status(400).json({
+                error: "Selected artist does not exist, or this song is used in a setlist."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
 
 app.get("/api/:table/:id", async (req, res) => {
 
@@ -3411,645 +6052,6 @@ app.delete("/api/:table", async (req, res) => {
    Returns events with venue and artist information.
 */
 
-app.get("/api/user/events", async (req, res) => {
-
-    try {
-
-        const result = await pool.query(`
-            SELECT
-                e.event_id,
-                e.event_name,
-                e.event_date,
-                e.start_time,
-                e.end_time,
-                v.venue_name,
-                STRING_AGG(
-                    DISTINCT a.artist_name,
-                    ', '
-                ) AS artists
-            FROM event e
-
-            JOIN venue v
-                ON e.venue_id = v.venue_id
-
-            LEFT JOIN performance p
-                ON e.event_id = p.event_id
-
-            LEFT JOIN artists a
-                ON p.artist_id = a.artist_id
-
-            GROUP BY
-                e.event_id,
-                e.event_name,
-                e.event_date,
-                e.start_time,
-                e.end_time,
-                v.venue_name
-
-            ORDER BY e.event_date, e.start_time
-        `);
-
-        res.json(result.rows);
-
-    } catch (error) {
-
-        console.error(error);
-
-        res.status(500).json({
-            error: error.message
-        });
-    }
-});
-
-
-/*
-   USER ARTISTS
-*/
-
-app.get("/api/user/artists", async (req, res) => {
-
-    try {
-
-        const result = await pool.query(`
-            SELECT
-                a.artist_id,
-                a.artist_name,
-                a.artist_type,
-                a.country,
-                STRING_AGG(
-                    DISTINCT g.genre_name,
-                    ', '
-                ) AS genres
-            FROM artists a
-
-            LEFT JOIN artist_genre ag
-                ON a.artist_id = ag.artist_id
-
-            LEFT JOIN genre g
-                ON ag.genre_id = g.genre_id
-
-            GROUP BY
-                a.artist_id,
-                a.artist_name,
-                a.artist_type,
-                a.country
-
-            ORDER BY a.artist_name
-        `);
-
-        res.json(result.rows);
-
-    } catch (error) {
-
-        console.error(error);
-
-        res.status(500).json({
-            error: error.message
-        });
-    }
-});
-
-
-/*
-   AVAILABLE TICKET TYPES
-
-   Used by booking page.
-*/
-
-app.get("/api/user/ticket-types", async (req, res) => {
-
-    try {
-
-        const result = await pool.query(`
-            SELECT
-                ticket_type_id,
-                type_name,
-                total_quantity,
-                available,
-                price
-            FROM ticket_type
-            WHERE available > 0
-            ORDER BY price
-        `);
-
-        res.json(result.rows);
-
-    } catch (error) {
-
-        console.error(error);
-
-        res.status(500).json({
-            error: error.message
-        });
-    }
-});
-
-
-/* =========================================================
-   COMPLETE BOOKING + PAYMENT
-
-   This is the important route for:
-
-   booking page
-        ↓
-   payment page
-        ↓
-   PostgreSQL
-
-   It creates:
-
-   1. attendee
-   2. ticket
-   3. payment
-
-   and decreases ticket_type.available.
-
-   All three happen inside ONE transaction.
-========================================================= */
-
-app.post("/api/bookings", async (req, res) => {
-
-    const client = await pool.connect();
-
-    try {
-
-        const {
-            event_id,
-            ticket_type_id,
-            attendee,
-            payment_method
-        } = req.body;
-
-
-        if (
-            !event_id ||
-            !ticket_type_id ||
-            !attendee ||
-            !payment_method
-        ) {
-
-            return res.status(400).json({
-                error: "Incomplete booking information"
-            });
-
-        }
-
-
-        await client.query("BEGIN");
-
-
-        /* -----------------------------------------
-           FIND EVENT
-        ----------------------------------------- */
-
-        const eventResult = await client.query(
-            `
-            SELECT
-    event_id,
-    event_name,
-    event_date::text AS event_date,
-    start_time,
-    end_time,
-    venue_id
-FROM event
-WHERE event_id = $1
-            `,
-            [event_id]
-        );
-
-
-        if (eventResult.rows.length === 0) {
-
-            throw new Error("Event not found");
-
-        }
-
-
-        const event = eventResult.rows[0];
-
-
-        /* -----------------------------------------
-           FIND TICKET TYPE
-        ----------------------------------------- */
-
-        const ticketResult = await client.query(
-            `
-            SELECT *
-            FROM ticket_type
-            WHERE ticket_type_id = $1
-            FOR UPDATE
-            `,
-            [ticket_type_id]
-        );
-
-
-        if (ticketResult.rows.length === 0) {
-
-            throw new Error("Ticket type not found");
-
-        }
-
-
-        const ticketType =
-            ticketResult.rows[0];
-
-
-        /* -----------------------------------------
-           CHECK AVAILABILITY
-        ----------------------------------------- */
-
-        if (ticketType.available <= 0) {
-
-            throw new Error(
-                "No tickets available for this ticket type"
-            );
-
-        }
-
-
-        /* -----------------------------------------
-           GENERATE ATTENDEE ID
-        ----------------------------------------- */
-
-        const attendeeIdResult =
-            await client.query(`
-                SELECT
-                    'AT' ||
-                    LPAD(
-                        (
-                            COALESCE(
-                                MAX(
-                                    CAST(
-                                        SUBSTRING(
-                                            attendee_id
-                                            FROM 3
-                                        ) AS INTEGER
-                                    )
-                                ),
-                                0
-                            ) + 1
-                        )::text,
-                        6,
-                        '0'
-                    ) AS attendee_id
-                FROM attendee
-            `);
-
-
-        const attendeeId =
-            attendeeIdResult.rows[0].attendee_id;
-
-
-        /* -----------------------------------------
-           INSERT ATTENDEE
-        ----------------------------------------- */
-
-        await client.query(
-            `
-            INSERT INTO attendee
-            (
-                attendee_id,
-                attendee_name,
-                email,
-                phone,
-                age
-            )
-            VALUES ($1, $2, $3, $4, $5)
-            `,
-            [
-                attendeeId,
-                attendee.name,
-                attendee.email,
-                attendee.phone,
-                attendee.age
-            ]
-        );
-
-
-        /* -----------------------------------------
-           GENERATE TICKET ID
-        ----------------------------------------- */
-
-        const ticketIdResult =
-            await client.query(`
-                SELECT
-                    'TK' ||
-                    LPAD(
-                        (
-                            COALESCE(
-                                MAX(
-                                    CAST(
-                                        SUBSTRING(
-                                            ticket_id
-                                            FROM 3
-                                        ) AS INTEGER
-                                    )
-                                ),
-                                0
-                            ) + 1
-                        )::text,
-                        6,
-                        '0'
-                    ) AS ticket_id
-                FROM ticket
-            `);
-
-
-        const ticketId =
-            ticketIdResult.rows[0].ticket_id;
-
-
-        /* -----------------------------------------
-           INSERT TICKET
-        ----------------------------------------- */
-
-        await client.query(
-            `
-            INSERT INTO ticket
-            (
-                ticket_id,
-                attendee_id,
-                ticket_type_id,
-                purchase_date,
-                entry_date,
-                ticket_status
-            )
-            VALUES
-            (
-                $1,
-                $2,
-                $3,
-                CURRENT_DATE,
-                $4,
-                'Active'
-            )
-            `,
-            [
-                ticketId,
-                attendeeId,
-                ticket_type_id,
-                event.event_date
-            ]
-        );
-
-
-
-
-
-        /* -----------------------------------------
-           GENERATE PAYMENT ID
-        ----------------------------------------- */
-
-        const paymentIdResult =
-            await client.query(`
-                SELECT
-                    'PM' ||
-                    LPAD(
-                        (
-                            COALESCE(
-                                MAX(
-                                    CAST(
-                                        SUBSTRING(
-                                            payment_id
-                                            FROM 3
-                                        ) AS INTEGER
-                                    )
-                                ),
-                                0
-                            ) + 1
-                        )::text,
-                        6,
-                        '0'
-                    ) AS payment_id
-                FROM payment
-            `);
-
-
-        const paymentId =
-            paymentIdResult.rows[0].payment_id;
-
-
-        /* -----------------------------------------
-           INSERT PAYMENT
-        ----------------------------------------- */
-
-        await client.query(
-            `
-            INSERT INTO payment
-            (
-                payment_id,
-                ticket_id,
-                amount,
-                payment_date,
-                payment_method,
-                payment_status
-            )
-            VALUES
-            (
-                $1,
-                $2,
-                $3,
-                CURRENT_TIMESTAMP,
-                $4,
-                'Success'
-            )
-            `,
-            [
-                paymentId,
-                ticketId,
-                ticketType.price,
-                payment_method
-            ]
-        );
-
-
-        /* -----------------------------------------
-           COMMIT
-        ----------------------------------------- */
-
-        await client.query("COMMIT");
-
-
-        res.status(201).json({
-
-            message: "Booking successful",
-
-            attendee_id: attendeeId,
-
-            ticket_id: ticketId,
-
-            payment_id: paymentId,
-
-            event_id: event_id,
-
-            ticket_type_id: ticket_type_id,
-
-            amount: ticketType.price,
-
-            ticket_status: "Active",
-
-            payment_status: "Success"
-
-        });
-
-
-    } catch (error) {
-
-        await client.query("ROLLBACK");
-
-        console.error(error);
-
-        res.status(500).json({
-            error: error.message
-        });
-
-    } finally {
-
-        client.release();
-
-    }
-});
-
-
-/* =========================================================
-   DASHBOARD / REPORT QUERIES
-   Useful for staff pages and DBMS demonstration.
-========================================================= */
-
-
-/*
-   Ticket + attendee information
-*/
-
-app.get("/api/reports/ticket-attendees", async (req, res) => {
-
-    try {
-
-        const result = await pool.query(`
-            SELECT
-                t.ticket_id,
-                a.attendee_id,
-                a.attendee_name,
-                a.email,
-                a.phone,
-                a.age,
-                tt.type_name AS ticket_type,
-                tt.price,
-                t.purchase_date,
-                t.entry_date,
-                t.ticket_status
-            FROM ticket t
-
-            INNER JOIN attendee a
-                ON t.attendee_id = a.attendee_id
-
-            INNER JOIN ticket_type tt
-                ON t.ticket_type_id = tt.ticket_type_id
-
-            ORDER BY t.ticket_id
-        `);
-
-        res.json(result.rows);
-
-    } catch (error) {
-
-        console.error(error);
-
-        res.status(500).json({
-            error: error.message
-        });
-    }
-});
-
-
-/*
-   Payment report
-*/
-
-app.get("/api/reports/payments", async (req, res) => {
-
-    try {
-
-        const result = await pool.query(`
-            SELECT
-                p.payment_id,
-                p.ticket_id,
-                a.attendee_name,
-                p.amount,
-                p.payment_date,
-                p.payment_method,
-                p.payment_status
-            FROM payment p
-
-            INNER JOIN ticket t
-                ON p.ticket_id = t.ticket_id
-
-            INNER JOIN attendee a
-                ON t.attendee_id = a.attendee_id
-
-            ORDER BY p.payment_date DESC
-        `);
-
-        res.json(result.rows);
-
-    } catch (error) {
-
-        console.error(error);
-
-        res.status(500).json({
-            error: error.message
-        });
-    }
-});
-
-
-/*
-   Event + venue + performances
-*/
-
-app.get("/api/reports/events", async (req, res) => {
-
-    try {
-
-        const result = await pool.query(`
-            SELECT
-                e.event_id,
-                e.event_name,
-                e.event_date,
-                e.start_time,
-                e.end_time,
-                v.venue_name,
-                s.stage_name,
-                a.artist_name,
-                p.performance_type
-            FROM event e
-
-            INNER JOIN venue v
-                ON e.venue_id = v.venue_id
-
-            LEFT JOIN performance p
-                ON e.event_id = p.event_id
-
-            LEFT JOIN artists a
-                ON p.artist_id = a.artist_id
-
-            LEFT JOIN stage s
-                ON p.stage_id = s.stage_id
-
-            ORDER BY e.event_date, e.start_time
-        `);
-
-        res.json(result.rows);
-
-    } catch (error) {
-
-        console.error(error);
-
-        res.status(500).json({
-            error: error.message
-        });
-    }
-});
 
 
 /* =========================================================

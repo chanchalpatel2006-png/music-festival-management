@@ -246,6 +246,15 @@ addTicketBtn.addEventListener(
 
         formError.textContent = "";
 
+        try {
+            document.getElementById("ticketId").value =
+                await generateNextId("ticket");
+        } catch (error) {
+            console.error(error);
+            alert("Could not generate Ticket ID.");
+            return;
+        }
+
         await Promise.all([
             loadAttendees(),
             loadTicketTypes()

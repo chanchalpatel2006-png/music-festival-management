@@ -106,7 +106,7 @@ function addRow(attendee) {
 
 addAttendeeBtn.addEventListener(
     "click",
-    function () {
+    async function () {
 
         editingRow = null;
 
@@ -114,22 +114,27 @@ addAttendeeBtn.addEventListener(
 
         formError.textContent = "";
 
+        try {
+            document.getElementById("attendeeId").value =
+                await generateNextId("attendee");
+        } catch (error) {
+            console.error(error);
+            alert("Could not generate Attendee ID.");
+            return;
+        }
 
         document.querySelector(
             "#attendeeModal h2"
         ).textContent =
             "Add Attendee";
 
-
         document.querySelector(
             ".save-btn"
         ).textContent =
             "Add Attendee";
 
-
         attendeeModal.style.display =
             "flex";
-
     }
 );
 

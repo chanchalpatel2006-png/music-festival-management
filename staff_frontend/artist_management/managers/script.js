@@ -68,12 +68,28 @@ function addRow(manager) {
 // OPEN ADD MANAGER POPUP
 // ------------------------------------
 
-addManagerBtn.addEventListener("click", function () {
+addManagerBtn.addEventListener("click", async function () {
 
     editingRow = null;
     editingManagerId = null;
 
     managerForm.reset();
+
+    try {
+
+        // Generate the next Manager ID
+        const nextId = await generateNextId("manager");
+
+        document.getElementById("managerId").value = nextId;
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Could not generate Manager ID.");
+
+        return;
+    }
 
     document.querySelector("#managerModal h2").textContent =
         "Add Manager";
@@ -339,5 +355,4 @@ managerTableBody.addEventListener("click", async function (event) {
 // ------------------------------------
 // LOAD DATA WHEN PAGE OPENS
 // ------------------------------------
-
 loadManagers();

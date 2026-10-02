@@ -197,6 +197,15 @@ addStageBtn.addEventListener(
 
         capacityError.textContent = "";
 
+        try {
+            document.getElementById("stageId").value =
+                await generateNextId("stage");
+        } catch (error) {
+            console.error(error);
+            alert("Could not generate Stage ID.");
+            return;
+        }
+
         // Reload venues
         await loadVenues();
 
@@ -212,7 +221,6 @@ addStageBtn.addEventListener(
 
         stageModal.style.display =
             "flex";
-
     }
 );
 

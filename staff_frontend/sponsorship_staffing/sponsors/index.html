@@ -7,7 +7,7 @@
 
     <title>Sponsor Management</title>
 
-    <link rel="stylesheet" href="../crud.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -98,7 +98,7 @@
                 type="text"
                 id="sponsor_id"
                 maxlength="6"
-                placeholder="e.g. SP0001"
+                readonly
                 required
             >
 
@@ -188,58 +188,8 @@
 
 </div>
 
-
-<script>
-
-window.pageConfig = {
-
-    name: "Sponsor",
-
-    fields: [
-        "sponsor_id",
-        "sponsor_name",
-        "phone",
-        "email",
-        "sponsorship_type",
-        "sponsorship_tier",
-        "sponsorship_amount"
-    ],
-
-    primaryKey: [
-        "sponsor_id"
-    ],
-
-    validate: function (values) {
-
-        if (!values.email.includes("@")) {
-
-            return "Email must contain @.";
-
-        }
-
-
-        if (
-            values.sponsorship_amount !== "" &&
-            (
-                Number(values.sponsorship_amount) < 0 ||
-                Number(values.sponsorship_amount) > 9999999999.99
-            )
-        ) {
-
-            return "Sponsorship amount must be 0 or greater.";
-
-        }
-
-
-        return "";
-
-    }
-
-};
-
-</script>
-
-<script src="../crud.js"></script>
+<script src="../../../idGenerator.js"></script>
+<script src="script.js"></script>
 
 </body>
 

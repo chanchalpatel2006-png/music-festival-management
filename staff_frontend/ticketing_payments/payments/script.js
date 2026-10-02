@@ -121,7 +121,7 @@ function addRow(payment) {
 
 addPaymentBtn.addEventListener(
     "click",
-    function () {
+    async function () {
 
         editingRow = null;
 
@@ -129,22 +129,27 @@ addPaymentBtn.addEventListener(
 
         formError.textContent = "";
 
+        try {
+            document.getElementById("paymentId").value =
+                await generateNextId("payment");
+        } catch (error) {
+            console.error(error);
+            alert("Could not generate Payment ID.");
+            return;
+        }
 
         document.querySelector(
             "#paymentModal h2"
         ).textContent =
             "Add Payment";
 
-
         document.querySelector(
             ".save-btn"
         ).textContent =
             "Add Payment";
 
-
         paymentModal.style.display =
             "flex";
-
     }
 );
 

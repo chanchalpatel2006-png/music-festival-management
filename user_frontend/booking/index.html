@@ -13,238 +13,229 @@
 <body>
 
 
-<nav class="navbar">
+    <nav class="navbar">
 
-    <a href="../index.html" class="logo">
-        🎵 Festivo
-    </a>
-
-    <div class="nav-links">
-        <a href="../index.html">Home</a>
-        <a href="../events/index.html">Events</a>
-        <a href="../artists/index.html">Artists</a>
-        <a href="index.html" class="active">My Ticket</a>
-        <a href="../../login/index.html" class="logout">Logout</a>
-    </div>
-
-</nav>
-
-
-<div class="booking-container">
-
-
-    <div class="booking-heading">
-
-        <span>STEP 1 OF 3</span>
-
-        <h1>Book Your Ticket</h1>
-
-        <p>
-            Choose your ticket and enter attendee information.
-        </p>
-
-    </div>
-
-
-    <div id="noEventMessage" class="no-event">
-
-        <h2>No Event Selected</h2>
-
-        <p>
-            Select an event before booking your ticket.
-        </p>
-
-        <a href="../events/index.html">
-            Browse Events
+        <a href="../index.html" class="logo">
+            🎵 Festivo
         </a>
 
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="../events/index.html">Events</a>
+            <a href="../artists/index.html">Artists</a>
+            <a href="index.html" class="active">My Ticket</a>
+            <a href="../../login/index.html" class="logout">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <div class="booking-container">
+
+
+        <div class="booking-heading">
+
+            <span>STEP 1 OF 3</span>
+
+            <h1>Book Your Ticket</h1>
+
+            <p>
+                Choose your ticket and enter attendee information.
+            </p>
+
+        </div>
+
+
+        <div id="noEventMessage" class="no-event">
+
+            <h2>No Event Selected</h2>
+
+            <p>
+                Select an event before booking your ticket.
+            </p>
+
+            <a href="../events/index.html">
+                Browse Events
+            </a>
+
+        </div>
+
+
+        <div id="bookingContent" class="booking-layout">
+
+
+            <!-- EVENT SUMMARY -->
+
+            <aside class="event-summary">
+
+                <span>YOUR EVENT</span>
+
+                <h2 id="eventName"></h2>
+
+                <div class="summary-row">
+                    <small>DATE</small>
+                    <p id="eventDate"></p>
+                </div>
+
+                <div class="summary-row">
+                    <small>TIME</small>
+                    <p id="eventTime"></p>
+                </div>
+
+                <div class="summary-row">
+                    <small>VENUE</small>
+                    <p id="eventVenue"></p>
+                </div>
+
+                <div class="summary-row">
+                    <small>Headliner</small>
+                    <p id="eventArtists"></p>
+                </div>
+
+            </aside>
+
+
+            <!-- FORM -->
+
+            <section class="booking-card">
+
+                <form id="bookingForm">
+
+
+                    <h2>Choose Ticket</h2>
+
+
+                    <div class="ticket-options">
+
+                        <label class="ticket-option">
+
+                            <input type="radio" name="ticket" value="GENERAL" data-ticket-type-id="TT01"
+                                data-price="2500" required>
+
+                            <div>
+                                <strong>GENERAL</strong>
+                                <span>Standard festival access</span>
+                            </div>
+
+                            <b>₹2,500</b>
+
+                        </label>
+
+
+                        <label class="ticket-option">
+
+                            <input type="radio" name="ticket" value="VIP" data-ticket-type-id="TT02" data-price="5000">
+
+                            <div>
+                                <strong>VIP</strong>
+                                <span>Premium festival experience</span>
+                            </div>
+
+                            <b>₹5,000</b>
+
+                        </label>
+
+
+                        <label class="ticket-option">
+
+                            <input type="radio" name="ticket" value="STUDENT" data-ticket-type-id="TT03"
+                                data-price="1200">
+
+                            <div>
+                                <strong>STUDENT</strong>
+                                <span>Special student ticket</span>
+                            </div>
+
+                            <b>₹1,200</b>
+
+                        </label>
+
+                    </div>
+
+
+                    <h2 class="attendee-title">
+                        Select Date
+                    </h2>
+
+
+                    <div class="date-options">
+
+                        <label>
+                            <input type="radio" name="eventDate" value="2026-12-20" required>
+                            20 December 2026
+                        </label>
+
+
+                        <label>
+                            <input type="radio" name="eventDate" value="2026-12-21">
+                            21 December 2026
+                        </label>
+
+
+                        <label>
+                            <input type="radio" name="eventDate" value="2026-12-22">
+                            22 December 2026
+                        </label>
+
+                    </div>
+
+
+                    <h2 class="attendee-title">
+                        Attendee Details
+                    </h2>
+
+
+                    <div class="form-grid">
+
+                        <div>
+                            <label>Full Name</label>
+
+                            <input type="text" id="attendeeName" maxlength="50" required>
+                        </div>
+
+
+                        <div>
+                            <label>Age</label>
+
+                            <input type="number" id="age" min="15" required>
+                        </div>
+
+
+                        <div>
+                            <label>Email</label>
+
+                            <input type="email" id="email" maxlength="50" required>
+                        </div>
+
+
+                        <div>
+                            <label>Phone</label>
+
+                            <input type="tel" id="phone" maxlength="15" required>
+                        </div>
+
+                    </div>
+
+
+                    <p id="errorMessage" class="error"></p>
+
+
+                    <button type="submit" class="continue-btn">
+                        Continue to Payment →
+                    </button>
+
+
+                </form>
+
+            </section>
+
+
+        </div>
+
     </div>
 
 
-    <div id="bookingContent" class="booking-layout">
-
-
-        <!-- EVENT SUMMARY -->
-
-        <aside class="event-summary">
-
-            <span>YOUR EVENT</span>
-
-            <h2 id="eventName"></h2>
-
-            <div class="summary-row">
-                <small>DATE</small>
-                <p id="eventDate"></p>
-            </div>
-
-            <div class="summary-row">
-                <small>TIME</small>
-                <p id="eventTime"></p>
-            </div>
-
-            <div class="summary-row">
-                <small>VENUE</small>
-                <p id="eventVenue"></p>
-            </div>
-
-            <div class="summary-row">
-                <small>ARTISTS</small>
-                <p id="eventArtists"></p>
-            </div>
-
-        </aside>
-
-
-        <!-- FORM -->
-
-        <section class="booking-card">
-
-            <form id="bookingForm">
-
-
-                <h2>Choose Ticket</h2>
-
-
-                <div class="ticket-options">
-
-
-                    <label class="ticket-option">
-
-                        <input
-                            type="radio"
-                            name="ticket"
-                            value="GENERAL"
-                            data-price="1499"
-                            required
-                        >
-
-                        <div>
-                            <strong>GENERAL</strong>
-                            <span>Standard festival access</span>
-                        </div>
-
-                        <b>₹1,499</b>
-
-                    </label>
-
-
-                    <label class="ticket-option">
-
-                        <input
-                            type="radio"
-                            name="ticket"
-                            value="VIP"
-                            data-price="3499"
-                        >
-
-                        <div>
-                            <strong>VIP</strong>
-                            <span>Premium festival experience</span>
-                        </div>
-
-                        <b>₹3,499</b>
-
-                    </label>
-
-
-                    <label class="ticket-option">
-
-                        <input
-                            type="radio"
-                            name="ticket"
-                            value="STUDENT"
-                            data-price="999"
-                        >
-
-                        <div>
-                            <strong>STUDENT</strong>
-                            <span>Special student ticket</span>
-                        </div>
-
-                        <b>₹999</b>
-
-                    </label>
-
-
-                </div>
-
-
-                <h2 class="attendee-title">
-                    Attendee Details
-                </h2>
-
-
-                <div class="form-grid">
-
-                    <div>
-                        <label>Full Name</label>
-
-                        <input
-                            type="text"
-                            id="attendeeName"
-                            maxlength="50"
-                            required
-                        >
-                    </div>
-
-
-                    <div>
-                        <label>Age</label>
-
-                        <input
-                            type="number"
-                            id="age"
-                            min="15"
-                            required
-                        >
-                    </div>
-
-
-                    <div>
-                        <label>Email</label>
-
-                        <input
-                            type="email"
-                            id="email"
-                            maxlength="50"
-                            required
-                        >
-                    </div>
-
-
-                    <div>
-                        <label>Phone</label>
-
-                        <input
-                            type="tel"
-                            id="phone"
-                            maxlength="15"
-                            required
-                        >
-                    </div>
-
-                </div>
-
-
-                <p id="errorMessage" class="error"></p>
-
-
-                <button type="submit" class="continue-btn">
-                    Continue to Payment →
-                </button>
-
-
-            </form>
-
-        </section>
-
-
-    </div>
-
-</div>
-
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 </body>
 

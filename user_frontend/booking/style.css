@@ -233,3 +233,91 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================= */
+/* FESTIVAL DATE SELECTION */
+/* ============================= */
+
+.date-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 5px;
+}
+
+.date-options label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70px;
+    padding: 15px;
+    border: 1px solid #dbe3ef;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #17233d;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Hide the normal radio button */
+
+.date-options input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Hover */
+
+.date-options label:hover {
+    border-color: #2563eb;
+    background: #f5f8ff;
+    transform: translateY(-2px);
+}
+
+/* Selected date */
+
+.date-options label:has(input:checked) {
+    border: 2px solid #2563eb;
+    background: #eef4ff;
+    color: #1e4fa8;
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.12);
+}
+
+/* Add a small check indicator */
+
+.date-options label:has(input:checked)::after {
+    content: "✓";
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+/* ============================= */
+/* MOBILE */
+/* ============================= */
+
+@media (max-width: 650px) {
+
+    .date-options {
+        grid-template-columns: 1fr;
+    }
+
+    .date-options label {
+        min-height: 55px;
+    }
+
+}

@@ -52,12 +52,21 @@ function addRow(genre) {
 
 
 // OPEN ADD GENRE MODAL
-addGenreBtn.addEventListener("click", function () {
+addGenreBtn.addEventListener("click", async function () {
 
     editingRow = null;
     editingGenreId = null;
 
     genreForm.reset();
+
+    try {
+        document.getElementById("genreId").value =
+            await generateNextId("genre");
+    } catch (error) {
+        console.error(error);
+        alert("Could not generate Genre ID.");
+        return;
+    }
 
     document.querySelector("#genreModal h2").textContent =
         "Add Genre";

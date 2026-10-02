@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api/stall";
+const API_URL = "http://localhost:3000/api/staff";
 
 const addRecordBtn =
     document.getElementById("addRecordBtn");
@@ -28,25 +28,27 @@ let editingRow = null;
 
 
 /* =========================================================
-   LOAD STALLS FROM DATABASE
+   LOAD STAFF
 ========================================================= */
 
-async function loadStalls() {
+async function loadStaff() {
 
     try {
 
-        const response = await fetch(API_URL);
+        const response =
+            await fetch(API_URL);
 
         if (!response.ok) {
-            throw new Error("Failed to load stalls.");
+            throw new Error("Failed to load staff.");
         }
 
-        const stalls = await response.json();
+        const staff =
+            await response.json();
 
         recordTableBody.innerHTML = "";
 
-        stalls.forEach(function (stall) {
-            addRow(stall);
+        staff.forEach(function (member) {
+            addRow(member);
         });
 
     } catch (error) {
@@ -54,68 +56,39 @@ async function loadStalls() {
         console.error(error);
 
         alert(
-            "Could not load stalls from database.\n" +
+            "Could not load staff from database.\n" +
             error.message
         );
-
     }
 }
 
-
-async function loadVendors() {
-    try {
-        const response = await fetch("http://localhost:3000/api/vendor");
-
-        if (!response.ok) {
-            throw new Error("Failed to load vendors");
-        }
-
-        const vendors = await response.json();
-
-        const vendorSelect = document.getElementById("vendor_id");
-
-        vendorSelect.innerHTML = `
-            <option value="">Select Vendor</option>
-        `;
-
-        vendors.forEach(vendor => {
-            const option = document.createElement("option");
-
-            option.value = vendor.vendor_id;
-            option.textContent =
-                `${vendor.vendor_name} (${vendor.vendor_id})`;
-
-            vendorSelect.appendChild(option);
-        });
-
-    } catch (error) {
-        console.error("Error loading vendors:", error);
-        alert("Could not load vendors.");
-    }
-}
 
 /* =========================================================
-   ADD ROW TO TABLE
+   ADD ROW
 ========================================================= */
 
-function addRow(stall) {
+function addRow(staff) {
 
-    const row = recordTableBody.insertRow();
+    const row =
+        recordTableBody.insertRow();
 
     row.insertCell(0).textContent =
-        stall.stall_id;
+        staff.staff_id;
 
     row.insertCell(1).textContent =
-        stall.vendor_id;
+        staff.staff_name;
 
     row.insertCell(2).textContent =
-        stall.stall_name;
+        staff.role;
 
     row.insertCell(3).textContent =
-        stall.stall_type;
+        staff.phone;
+
+    row.insertCell(4).textContent =
+        staff.email;
 
     const actionCell =
-        row.insertCell(4);
+        row.insertCell(5);
 
     actionCell.innerHTML = `
         <button type="button" class="edit-btn">
@@ -144,19 +117,19 @@ addRecordBtn.addEventListener(
         formError.textContent = "";
 
         try {
-            document.getElementById("stall_id").value =
-                await generateNextId("stall");
+            document.getElementById("staff_id").value =
+                await generateNextId("staff");
         } catch (error) {
             console.error(error);
-            alert("Could not generate Stall ID.");
+            alert("Could not generate Staff ID.");
             return;
         }
 
         modalTitle.textContent =
-            "Add Stall";
+            "Add Staff";
 
         saveBtn.textContent =
-            "Add Stall";
+            "Add Staff";
 
         recordModal.style.display =
             "flex";
@@ -196,7 +169,7 @@ window.addEventListener(
 
 
 /* =========================================================
-   ADD / UPDATE STALL
+   ADD / UPDATE STAFF
 ========================================================= */
 
 recordForm.addEventListener(
@@ -205,40 +178,55 @@ recordForm.addEventListener(
 
         event.preventDefault();
 
-        const stall_id =
+        const staff_id =
             document.getElementById(
-                "stall_id"
+                "staff_id"
             ).value.trim();
 
-        const vendor_id =
+        const staff_name =
             document.getElementById(
-                "vendor_id"
+                "staff_name"
             ).value.trim();
 
-        const stall_name =
+        const role =
             document.getElementById(
-                "stall_name"
+                "role"
+            ).value;
+
+        const phone =
+            document.getElementById(
+                "phone"
             ).value.trim();
 
-        const stall_type =
+        const email =
             document.getElementById(
-                "stall_type"
+                "email"
             ).value.trim();
 
 
-        /* -----------------------------------------
-           BASIC VALIDATION
-        ----------------------------------------- */
+        /* =========================
+           VALIDATION
+        ========================= */
 
         if (
-            !stall_id ||
-            !vendor_id ||
-            !stall_name ||
-            !stall_type
+            !staff_id ||
+            !staff_name ||
+            !role ||
+            !phone ||
+            !email
         ) {
 
             formError.textContent =
                 "Please fill all required fields.";
+
+            return;
+        }
+
+
+        if (!email.includes("@")) {
+
+            formError.textContent =
+                "Email must contain @.";
 
             return;
         }
@@ -249,13 +237,13 @@ recordForm.addEventListener(
 
         try {
 
-            /* =====================================
+            /* =========================
                UPDATE
-            ===================================== */
+            ========================= */
 
             if (editingRow !== null) {
 
-                const oldStallId =
+                const oldStaffId =
                     editingRow.cells[0]
                         .textContent;
 
@@ -272,23 +260,25 @@ recordForm.addEventListener(
 
                         body: JSON.stringify({
 
-                            old_stall_id:
-                                oldStallId,
+                            old_staff_id:
+                                oldStaffId,
 
-                            stall_id:
-                                stall_id,
+                            staff_id:
+                                staff_id,
 
-                            vendor_id:
-                                vendor_id,
+                            staff_name:
+                                staff_name,
 
-                            stall_name:
-                                stall_name,
+                            role:
+                                role,
 
-                            stall_type:
-                                stall_type
+                            phone:
+                                phone,
+
+                            email:
+                                email
 
                         })
-
                     });
 
 
@@ -300,30 +290,31 @@ recordForm.addEventListener(
 
                     throw new Error(
                         result.error ||
-                        "Stall update failed."
+                        "Staff update failed."
                     );
-
                 }
 
 
                 editingRow.cells[0].textContent =
-                    result.stall_id;
+                    result.staff_id;
 
                 editingRow.cells[1].textContent =
-                    result.vendor_id;
+                    result.staff_name;
 
                 editingRow.cells[2].textContent =
-                    result.stall_name;
+                    result.role;
 
                 editingRow.cells[3].textContent =
-                    result.stall_type;
+                    result.phone;
 
+                editingRow.cells[4].textContent =
+                    result.email;
             }
 
 
-            /* =====================================
+            /* =========================
                INSERT
-            ===================================== */
+            ========================= */
 
             else {
 
@@ -339,20 +330,22 @@ recordForm.addEventListener(
 
                         body: JSON.stringify({
 
-                            stall_id:
-                                stall_id,
+                            staff_id:
+                                staff_id,
 
-                            vendor_id:
-                                vendor_id,
+                            staff_name:
+                                staff_name,
 
-                            stall_name:
-                                stall_name,
+                            role:
+                                role,
 
-                            stall_type:
-                                stall_type
+                            phone:
+                                phone,
+
+                            email:
+                                email
 
                         })
-
                     });
 
 
@@ -364,9 +357,8 @@ recordForm.addEventListener(
 
                     throw new Error(
                         result.error ||
-                        "Stall insertion failed."
+                        "Staff insertion failed."
                     );
-
                 }
 
 
@@ -402,28 +394,27 @@ recordTableBody.addEventListener(
         const row =
             event.target.closest("tr");
 
-
         if (!row) {
             return;
         }
 
 
-        /* =====================================
+        /* =========================
            DELETE
-        ===================================== */
+        ========================= */
 
         if (
             event.target.classList
                 .contains("delete-btn")
         ) {
 
-            const stallId =
+            const staffId =
                 row.cells[0].textContent;
 
 
             const confirmed =
                 confirm(
-                    "Are you sure you want to delete this stall?"
+                    "Are you sure you want to delete this staff member?"
                 );
 
 
@@ -436,7 +427,7 @@ recordTableBody.addEventListener(
 
                 const response =
                     await fetch(
-                        `${API_URL}/${stallId}`,
+                        `${API_URL}/${staffId}`,
                         {
                             method: "DELETE"
                         }
@@ -451,14 +442,12 @@ recordTableBody.addEventListener(
 
                     throw new Error(
                         result.error ||
-                        "Stall deletion failed."
+                        "Staff deletion failed."
                     );
-
                 }
 
 
                 row.remove();
-
 
             } catch (error) {
 
@@ -471,9 +460,9 @@ recordTableBody.addEventListener(
         }
 
 
-        /* =====================================
+        /* =========================
            EDIT
-        ===================================== */
+        ========================= */
 
         if (
             event.target.classList
@@ -484,33 +473,39 @@ recordTableBody.addEventListener(
 
 
             document.getElementById(
-                "stall_id"
+                "staff_id"
             ).value =
                 row.cells[0].textContent;
 
 
             document.getElementById(
-                "vendor_id"
+                "staff_name"
             ).value =
                 row.cells[1].textContent;
 
 
             document.getElementById(
-                "stall_name"
+                "role"
             ).value =
                 row.cells[2].textContent;
 
 
             document.getElementById(
-                "stall_type"
+                "phone"
             ).value =
                 row.cells[3].textContent;
+
+
+            document.getElementById(
+                "email"
+            ).value =
+                row.cells[4].textContent;
 
 
             formError.textContent = "";
 
             modalTitle.textContent =
-                "Edit Stall";
+                "Edit Staff";
 
             saveBtn.textContent =
                 "Save Changes";
@@ -526,5 +521,5 @@ recordTableBody.addEventListener(
 /* =========================================================
    INITIAL LOAD
 ========================================================= */
-loadVendors();
-loadStalls();
+
+loadStaff();

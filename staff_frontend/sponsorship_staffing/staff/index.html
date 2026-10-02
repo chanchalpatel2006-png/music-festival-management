@@ -10,7 +10,7 @@
 
     <title>Staff Management</title>
 
-    <link rel="stylesheet" href="../crud.css">
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -141,7 +141,7 @@
                 type="text"
                 id="staff_id"
                 maxlength="6"
-                placeholder="e.g. SF0001"
+                readonly
                 required
             >
 
@@ -239,42 +239,9 @@
 </div>
 
 
-<script>
 
-window.pageConfig = {
-
-    name: "Staff",
-
-    fields: [
-        "staff_id",
-        "staff_name",
-        "role",
-        "phone",
-        "email"
-    ],
-
-    primaryKey: [
-        "staff_id"
-    ],
-
-    validate: function (values) {
-
-        if (!values.email.includes("@")) {
-
-            return "Email must contain @.";
-
-        }
-
-        return "";
-
-    }
-
-};
-
-</script>
-
-
-<script src="../crud.js"></script>
+<script src="../../../idGenerator.js"></script>
+<script src="script.js"></script>
 
 </body>
 

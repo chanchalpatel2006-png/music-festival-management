@@ -147,10 +147,18 @@ function addRow(member) {
 addMemberBtn.addEventListener("click", async function () {
 
     editingRow = null;
+    editingMemberId = null;
 
     memberForm.reset();
 
-    await loadArtists();
+    try {
+        document.getElementById("memberId").value =
+            await generateNextId("artist_member");
+    } catch (error) {
+        console.error(error);
+        alert("Could not generate Member ID.");
+        return;
+    }
 
     document.querySelector("#memberModal h2").textContent =
         "Add Artist Member";
